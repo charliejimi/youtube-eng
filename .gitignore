@@ -1,0 +1,22 @@
+__pycache__/
+*.pyc
+
+# 專案執行過程產生／個人化資料，不需進版控
+user_data.json
+bookmarks.json
+subtitle_cache.json
+translation_cache.json
+app_log.txt
+word_banks.json
+
+# 編輯器／工具本機設定
+.vscode/
+.idea/
+
+# 打包／建置產物
+build/
+dist/
+english_learning.spec
+
+
+
