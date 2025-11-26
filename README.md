@@ -16,7 +16,9 @@
 
 ## 📖 簡介
 
-英文學習系統是一個專為英語學習者設計的互動式學習平台。透過 YouTube 影片提供沉浸式學習體驗，支援雙語字幕同步顯示、單字查詢、個人單字庫管理、智慧複習等功能，幫助您更有效率地學習英語。
+類似功能的網站好像都要付費, 那就用Cursor來寫一個吧:D
+英文學習系統是一個專為英語學習者設計的互動式學習平台。
+透過 YouTube 影片提供沉浸式學習體驗，支援雙語字幕同步顯示、單字查詢、個人單字庫管理、智慧複習等功能，幫助您更有效率地學習英語。
 
 ### 主要特色
 
@@ -71,8 +73,8 @@
 1. **克隆專案**
 
 ```bash
-git clone https://github.com/yourusername/english_learning.git
-cd english_learning
+git clone https://github.com/craig7351/youtube-eng.git
+cd youtube-eng
 ```
 
 2. **安裝依賴**
@@ -156,7 +158,7 @@ python app.py
 - **單字高亮**：開啟/關閉當前單字高亮功能
 - **時間偏移**：調整字幕與影片的同步時間（±0.5秒）
 - **影片大小**：小、中、大
-- **字幕行數**：小（3行）、中（10行）、大（15行）
+- **字幕行數**：小、中、大
 - **字體大小**：小、中、大
 - **布局**：左右（寬螢幕）或上下（窄螢幕）
 - **容器寬度**：1200px ~ 1800px 或 100% 全寬
@@ -215,24 +217,6 @@ python app.py
 - **查看排行榜**：點擊「🏆 排行榜」按鈕查看學習時間榜和複習成績榜
 - **暱稱管理**：點擊暱稱旁的 🔄 按鈕可修改暱稱
 
-### 詳細功能說明
-
-詳細的使用說明請參考 [使用手冊](USER_GUIDE.md)。
-
-### 📹 操作影片
-
-我們正在準備操作示範影片，將展示：
-- 如何載入 YouTube 影片
-- 如何使用單字查詢功能
-- 如何管理單字庫
-- 如何使用複習模式（包括填空模式）
-
-**製作操作影片建議**：
-- 使用螢幕錄製工具（如 OBS Studio、Camtasia、ScreenFlow）
-- 錄製時長建議 3-5 分鐘
-- 重點展示核心功能
-- 上傳至 YouTube 或 GitHub Releases
-
 ## 🛠️ 技術架構
 
 ### 技術棧
@@ -254,7 +238,7 @@ python app.py
 ### 專案結構
 
 ```
-english_learning/
+youtube-eng/
 ├── app.py                 # Flask 主應用程式
 ├── run.py                 # 啟動腳本（自動檢查依賴）
 ├── requirements.txt       # Python 依賴
@@ -263,11 +247,6 @@ english_learning/
 ├── static/
 │   ├── style.css         # 樣式文件
 │   └── script.js         # 前端邏輯
-├── screenshots/          # 網站截圖
-│   ├── main-page.png     # 主頁面截圖
-│   ├── video-learning.png # 影片學習介面截圖
-│   ├── word-bank.png     # 單字庫管理截圖
-│   └── review-mode.png   # 複習模式截圖
 ├── word_banks.json       # 單字庫數據
 ├── user_data.json        # 用戶學習統計
 ├── subtitle_cache.json   # 字幕快取
@@ -292,9 +271,6 @@ python run.py
 ```bash
 # Windows
 build_exe.bat
-
-# 或使用 PyInstaller
-pyinstaller english_learning.spec
 ```
 
 ## 🤝 貢獻
@@ -316,7 +292,6 @@ pyinstaller english_learning.spec
 **Craig Huang**
 
 - Email: craig7351@gmail.com
-- GitHub: [@yourusername](https://github.com/yourusername)
 
 ## 🙏 致謝
 
