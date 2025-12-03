@@ -75,7 +75,9 @@ result:github_pushV2.8_AI_Path.html
 ##任務2:
 當使用者刪除檔案後, 假使 該檔案是folder的最後一個檔案, 則該檔案和資料截必須都刪除, 檔案瀏覽器的內容必須同步更新, 而且 目標路徑(含檔名)的欄位必須更新
 注意: 其他部分不可以改變
-result:github_pushV2.11.1.html
+
+
+result:GitHub 檔案管理終端 v2.9 (Exe Support + AI Path)
 
 
 
