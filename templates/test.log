@@ -1,0 +1,887 @@
+altiplano@altiplano:~$ kubectl edit statefulsets.apps altiplano-nta-altiplano-trend-analyzer
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    meta.helm.sh/release-name: altiplano-nta
+    meta.helm.sh/release-namespace: default
+  creationTimestamp: "2025-08-20T08:43:49Z"
+  generation: 4
+  labels:
+    app: altiplano-trend-analyzer
+    app.kubernetes.io/managed-by: Helm
+    chart: altiplano-trend-analyzer-24.12.0-REL-0009
+    heritage: Helm
+    release: altiplano-nta
+  name: altiplano-nta-altiplano-trend-analyzer
+  namespace: default
+  resourceVersion: "8797984"
+  uid: e5402fd0-e9dc-4728-8e94-8eed01ca824e
+spec:
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  podManagementPolicy: OrderedReady
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+      release: altiplano-nta
+  serviceName: altiplano-nta-altiplano-trend-analyzer
+  template:
+        release: altiplano-nta
+        - name: CA_CERT
+          value: /etc/altiplano/certificates/secrets/nta-kafka-client-trustchain.pem
+        - name: CLIENT_CERT
+          value: /etc/altiplano/certificates/secrets/nta-kafka-client-cert.pem
+        - name: CLIENT_KEY
+          value: /etc/altiplano/certificates/secrets/nta-kafka-client-key.pem
+        - name: CLIENT_KEY_PASS
+          valueFrom:
+            secretKeyRef:
+              key: nta-kafka-client-key.pass
+              name: nta-certificate-secrets
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: altiplano-kafka-headless:9092
+        - name: REPLICAS_COUNT
+          value: "1"
+        - name: KAFKA_ZOOKEEPER_SERVERS
+          value: altiplano-zookeeper:2181
+        - name: OPENTSDB_BATCH_MAX_DATA
+          value: "500000"
+        - name: OPENTSDB_MAX_CHUNK_SIZE
+          value: "11000"
+        - name: LOGS_IS_URL
+          value: https://altiplano-indexsearch:9200
+        - name: IS_USE_SSL
+          value: "false"
+        - name: CONTROLLER_RELEASE_NAME
+          value: nokia
+        - name: KAFKA_TREND_ANALYZER_CONFIG_UPDATE_TOPIC
+          value: nokia-altiplano-ac_INTERNAL_PM-Enum-mapping
+        - name: KAFKA_TREND_ANALYZER_DEVICES_UPDATE_TOPIC
+          value: nokia-altiplano-av_DEVICE_MANAGEMENT
+        - name: NAC_CONNECTION_URL
+          value: http://nokia-altiplano-ac:8181
+        - name: NAV_CONNECTION_URL
+          value: http://nokia-altiplano-av:8181
+        - name: FLUENTD_LOG_DIRECT_URL
+          value: altiplano-fluentd:24224
+        - name: HA_PING_INTERVAL_MS
+          value: "30000"
+        - name: CB_FAILURE_THRESHOLD
+          value: "2"
+        - name: CB_RESET_TIMEOUT_MS
+          value: "60000"
+        - name: FLUENTD_CONNECTION_TIMEOUT_MS
+          value: "15000"
+        - name: FLUENTD_READ_TIMEOUT_MS
+          value: "30000"
+        - name: TCA_ENGINE_URL
+          value: http://nokia-altiplano-tcaengine:8181
+        - name: CLIENT_REQUEST_TIMEOUT
+          value: "300"
+        - name: KAFKA_TREND_ANALYZER_LITE_SERVICE_UPDATE_TOPIC
+          value: nokia-altiplano-av_INTERNAL_lite-services-meta
+        - name: CLIENT_MAX_CONNECTIONS
+          value: "100"
+        - name: MAX_POOL_CONNECTIONS
+          value: "20"
+        - name: MAX_NUMBER_OF_CHUNKS_IN_POOL
+          value: "1000"
+        - name: MAX_NUMBER_OF_PENDING_REQUESTS
+          value: "8"
+        - name: MAX_PROCESSES
+          value: "4"
+        - name: PROTECTION_MECHANISM_ENABLED
+          value: "True"
+        - name: COUNTERS_PREDICTION_BACKUP_FILE_NUMBER
+          value: "5"
+        - name: OPENTSDB_URL
+          value: http://altiplano-opentsdb:4242
+        - name: LOG_LEVEL
+          value: DEBUG
+        - name: UPDATE_PERIOD_TIME_UNIT_IN_MINUTES
+          value: "True"
+        - name: PERFORM_PREDICTION_INTERVAL
+          value: "300"
+        - name: LOG_OPT
+          value: fluentd
+        - name: IS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: IS_PASSWORD
+              name: altiplano-nta-altiplano-trend-analyzer
+        - name: IS_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: IS_USERNAME
+              name: altiplano-nta-altiplano-trend-analyzer
+        - name: NAC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: NAC_PASSWORD
+              name: altiplano-nta-altiplano-trend-analyzer
+        - name: NAC_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: NAC_USERNAME
+              name: altiplano-nta-altiplano-trend-analyzer
+        - name: NAV_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: NAV_PASSWORD
+              name: altiplano-nta-altiplano-trend-analyzer
+        - name: NAV_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: NAV_USERNAME
+              name: altiplano-nta-altiplano-trend-analyzer
+        image: artifactory.net.nokia.com/trend-analyzer:24.12.0-REL_9
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - curl
+              - -X
+              - POST
+              - http://localhost:7777/shutdown
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - curl -s -m 10 http://localhost:7777/rest/highAvailability/v1/status
+              | grep -E -i 'starting|normal|degraded'
+          failureThreshold: 3
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 10
+        name: altiplano-trend-analyzer
+        ports:
+        - containerPort: 7777
+          name: http
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - curl -s -m 10 http://localhost:7777/rest/highAvailability/v1/status
+              | grep -E -i 'normal|degraded'
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+        resources:
+          limits:
+            cpu: "2"
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            memory: 1Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/altiplano/certificates/secrets
+          name: nta-all-certificate-secrets
+        - mountPath: /etc/trend-analyzer
+          name: log-levels-configmap
+        - mountPath: /home/trend-analyzer-storage
+          name: trend-analyzer-storage
+      dnsPolicy: ClusterFirst
+      initContainers:
+      - args:
+        - ' until [  $ALTIPLANO_GEO_ACTIVE_SITE = true ]; do echo waiting for ALTIPLANO_GEO_ACTIVE_SITE
+          to be true; sleep 10; done '
+        command:
+        - sh
+        - -c
+        env:
+        - name: ALTIPLANO_GEO_ACTIVE_SITE
+          value: "true"
+        - name: OPENTSDB_URL
+          value: http://altiplano-opentsdb:4242
+        - name: TCA_ENGINE_URL
+          value: http://nokia-altiplano-tcaengine:8181
+        image: artifactory.net.nokia.com/trend-analyzer:24.12.0-REL_9
+        imagePullPolicy: IfNotPresent
+        name: init-altiplano-trend-analyzer
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/altiplano/certificates/secrets
+          name: nta-all-certificate-secrets
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: component-all-keys-storage
+        secret:
+          defaultMode: 420
+          secretName: altiplano-secrets-keys
+      - configMap:
+          defaultMode: 420
+          name: nokia-altiplano-tsa-log-categories
+        name: log-levels-configmap
+      - name: nta-all-certificate-secrets
+        secret:
+          defaultMode: 420
+          secretName: nta-certificate-secrets
+      - name: trend-analyzer-storage
+        persistentVolumeClaim:
+          claimName: nta-pvc
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
+    type: RollingUpdate
+status:
+  availableReplicas: 1
+  collisionCount: 0
+  currentReplicas: 1
+  currentRevision: altiplano-nta-altiplano-trend-analyzer-856db8687b
+  observedGeneration: 4
+  readyReplicas: 1
+  replicas: 1
+  updateRevision: altiplano-nta-altiplano-trend-analyzer-856db8687b
+Edit cancelled, no changes made.
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ kubectl get pods 
+NAME                                                             READY   STATUS    RESTARTS     AGE
+altiplano-fha-d5489c5d4-bszd9                                    2/2     Running   0            9d
+altiplano-kafka-0                                                2/2     Running   0            9d
+altiplano-nspos-rabbitmq-0                                       1/1     Running   0            9d
+altiplano-nta-altiplano-trend-analyzer-0                         1/1     Running   6 (9d ago)   9d
+altiplano-pcp-8556fdd7ff-dpw68                                   1/1     Running   8 (9d ago)   9d
+altiplano-ptm-altiplano-passive-topology-5fdb475c95-d9t4v        1/1     Running   4 (9d ago)   9d
+altiplano-pts-pushgateway-7cd75d856d-jcdx8                       1/1     Running   0            9d
+altiplano-pts-server-5ff8c46494-pk2vw                            4/4     Running   0            9d
+altiplano-sso-0                                                  2/2     Running   0            9d
+altiplano-zookeeper-0                                            2/2     Running   0            9d
+nokia-altiplano-ac-6bd994676d-ftnns                              1/1     Running   0            9d
+nokia-altiplano-alarmisbridge-5bb89dd478-4qnpz                   1/1     Running   0            9d
+nokia-altiplano-av-7f4dfb8977-c2l7c                              1/1     Running   0            9d
+nokia-altiplano-cliadapterac-7bb4d8785c-nwqfl                    1/1     Running   0            9d
+nokia-altiplano-cliadapterav-667949fff7-sw2zx                    1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-8zdg7                1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-db9mq                1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-rjdzz                1/1     Running   0            9d
+nokia-altiplano-healthengine-6d5fd944f4-fdx65                    1/1     Running   0            9d
+nokia-altiplano-healthtoisbridge-74fcc74dc5-n9brq                1/1     Running   0            9d
+nokia-altiplano-ipfixbecollector-77cc75df8f-k7qsf                1/1     Running   0            9d
+nokia-altiplano-ipfixfecollector-65b6895454-cb4pf                1/1     Running   0            9d
+nokia-altiplano-nclivecollector-69d4b45bdd-gkb2q                 1/1     Running   0            9d
+nokia-altiplano-netconfinventorycollector-76f9fdb646-vj992       1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-api-default-6b88d5df7d-jbjth         1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-engine-default-7c4cb4f4fb-p4pz6      1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-engine-triggers-66fdcf5dfb-pgqfw     1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-executor-default-7cdc8579d5-8hlmh    1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-executor-triggers-8489ddb4f7-6wpwh   1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-notifier-default-6d87c9bc4d-pgzfk    1/1     Running   0            9d
+nokia-altiplano-nspos-app3-tomcat-5967cfc4fb-m2hjg               1/1     Running   0            9d
+nokia-altiplano-pm-scheduler-778986f7b5-4bjbb                    1/1     Running   0            9d
+nokia-altiplano-pmfilegenerator-595f6b8df9-z496h                 1/1     Running   0            9d
+nokia-altiplano-snmp-trap-forwarder-6fb4d9c567-6lstv             1/1     Running   0            9d
+nokia-altiplano-soapadapter-bb6667b54-26qnp                      1/1     Running   0            9d
+nokia-altiplano-tcaengine-f6fdb75dc-r5tgx                        1/1     Running   1 (9d ago)   9d
+nokia-infra-altiplano-backup-restore-helper-74d69b895c-7t9vb     1/1     Running   0            9d
+nokia-infra-altiplano-cbur-74b4d4f5dd-8xfjr                      3/3     Running   0            9d
+nokia-infra-altiplano-cbur-k8swatcher-65c79498ff-w779r           2/2     Running   0            9d
+nokia-infra-altiplano-cbur-mycelery-674576d948-qltlm             3/3     Running   0            9d
+nokia-infra-altiplano-fluentd-ds-52bpf                           1/1     Running   0            9d
+nokia-infra-altiplano-grafana-0                                  4/4     Running   2 (9d ago)   9d
+nokia-infra-altiplano-hbase-master-0                             3/3     Running   0            9d
+nokia-infra-altiplano-hbase-regionserver-0                       2/2     Running   0            9d
+nokia-infra-altiplano-hdfs-datanode-0                            2/2     Running   0            9d
+nokia-infra-altiplano-hdfs-namenode-0                            2/2     Running   0            9d
+nokia-infra-altiplano-indexsearch-client-7fcf4b6867-7mn68        1/1     Running   0            9d
+nokia-infra-altiplano-indexsearch-dashboards-77b5fc794b-md6hl    1/1     Running   0            9d
+nokia-infra-altiplano-indexsearch-data-0                         2/2     Running   0            9d
+nokia-infra-altiplano-indexsearch-manager-0                      1/1     Running   0            9d
+nokia-infra-altiplano-ingress-v4x29                              1/1     Running   0            9d
+nokia-infra-altiplano-mariadb-mariadb-0                          4/4     Running   0            9d
+nokia-infra-altiplano-oauth2-proxy-68654fc5cf-7bbjc              1/1     Running   0            9d
+nokia-infra-altiplano-oauth2-proxy-nbi-6876846ddf-kc4wx          1/1     Running   0            9d
+nokia-infra-altiplano-opentsdb-67f547c9fb-x5knx                  4/4     Running   0            9d
+nokia-infra-altiplano-pts-alertmanager-749748666b-xptkj          3/3     Running   0            9d
+nokia-infra-altiplano-pts-kube-state-metrics-64b544998b-bmdjp    1/1     Running   0            9d
+nokia-infra-altiplano-pts-node-exporter-mjnfh                    1/1     Running   0            9d
+nokia-infra-altiplano-redis-admin-5f9db4f8b5-b2s4k               1/1     Running   0            9d
+nokia-infra-altiplano-redis-server-0                             2/2     Running   0            9d
+nokia-infra-altiplano-webdav-6f9474dd6-t4xrz                     2/2     Running   0            9d
+nokia-infra-default404-5b48988689-nhdrg                          1/1     Running   0            9d
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ kubectl delete pods altiplano-nta-altiplano-trend-analyzer-0 
+pod "altiplano-nta-altiplano-trend-analyzer-0" deleted
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ kubectl get pods 
+NAME                                                             READY   STATUS    RESTARTS     AGE
+altiplano-fha-d5489c5d4-bszd9                                    2/2     Running   0            9d
+altiplano-kafka-0                                                2/2     Running   0            9d
+altiplano-nspos-rabbitmq-0                                       1/1     Running   0            9d
+altiplano-nta-altiplano-trend-analyzer-0                         1/1     Running   0            103s
+altiplano-pcp-8556fdd7ff-dpw68                                   1/1     Running   8 (9d ago)   9d
+altiplano-ptm-altiplano-passive-topology-5fdb475c95-d9t4v        1/1     Running   4 (9d ago)   9d
+altiplano-pts-pushgateway-7cd75d856d-jcdx8                       1/1     Running   0            9d
+altiplano-pts-server-5ff8c46494-pk2vw                            4/4     Running   0            9d
+altiplano-sso-0                                                  2/2     Running   0            9d
+altiplano-zookeeper-0                                            2/2     Running   0            9d
+nokia-altiplano-ac-6bd994676d-ftnns                              1/1     Running   0            9d
+nokia-altiplano-alarmisbridge-5bb89dd478-4qnpz                   1/1     Running   0            9d
+nokia-altiplano-av-7f4dfb8977-c2l7c                              1/1     Running   0            9d
+nokia-altiplano-cliadapterac-7bb4d8785c-nwqfl                    1/1     Running   0            9d
+nokia-altiplano-cliadapterav-667949fff7-sw2zx                    1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-8zdg7                1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-db9mq                1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-rjdzz                1/1     Running   0            9d
+nokia-altiplano-healthengine-6d5fd944f4-fdx65                    1/1     Running   0            9d
+nokia-altiplano-healthtoisbridge-74fcc74dc5-n9brq                1/1     Running   0            9d
+nokia-altiplano-ipfixbecollector-77cc75df8f-k7qsf                1/1     Running   0            9d
+nokia-altiplano-ipfixfecollector-65b6895454-cb4pf                1/1     Running   0            9d
+nokia-altiplano-nclivecollector-69d4b45bdd-gkb2q                 1/1     Running   0            9d
+nokia-altiplano-netconfinventorycollector-76f9fdb646-vj992       1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-api-default-6b88d5df7d-jbjth         1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-engine-default-7c4cb4f4fb-p4pz6      1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-engine-triggers-66fdcf5dfb-pgqfw     1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-executor-default-7cdc8579d5-8hlmh    1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-executor-triggers-8489ddb4f7-6wpwh   1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-notifier-default-6d87c9bc4d-pgzfk    1/1     Running   0            9d
+nokia-altiplano-nspos-app3-tomcat-5967cfc4fb-m2hjg               1/1     Running   0            9d
+nokia-altiplano-pm-scheduler-778986f7b5-4bjbb                    1/1     Running   0            9d
+nokia-altiplano-pmfilegenerator-595f6b8df9-z496h                 1/1     Running   0            9d
+nokia-altiplano-snmp-trap-forwarder-6fb4d9c567-6lstv             1/1     Running   0            9d
+nokia-altiplano-soapadapter-bb6667b54-26qnp                      1/1     Running   0            9d
+nokia-altiplano-tcaengine-f6fdb75dc-r5tgx                        1/1     Running   1 (9d ago)   9d
+nokia-infra-altiplano-backup-restore-helper-74d69b895c-7t9vb     1/1     Running   0            9d
+nokia-infra-altiplano-cbur-74b4d4f5dd-8xfjr                      3/3     Running   0            9d
+nokia-infra-altiplano-cbur-k8swatcher-65c79498ff-w779r           2/2     Running   0            9d
+nokia-infra-altiplano-cbur-mycelery-674576d948-qltlm             3/3     Running   0            9d
+nokia-infra-altiplano-fluentd-ds-52bpf                           1/1     Running   0            9d
+nokia-infra-altiplano-grafana-0                                  4/4     Running   2 (9d ago)   9d
+nokia-infra-altiplano-hbase-master-0                             3/3     Running   0            9d
+nokia-infra-altiplano-hbase-regionserver-0                       2/2     Running   0            9d
+nokia-infra-altiplano-hdfs-datanode-0                            2/2     Running   0            9d
+nokia-infra-altiplano-hdfs-namenode-0                            2/2     Running   0            9d
+nokia-infra-altiplano-indexsearch-client-7fcf4b6867-7mn68        1/1     Running   0            9d
+nokia-infra-altiplano-indexsearch-dashboards-77b5fc794b-md6hl    1/1     Running   0            9d
+nokia-infra-altiplano-indexsearch-data-0                         2/2     Running   0            9d
+nokia-infra-altiplano-indexsearch-manager-0                      1/1     Running   0            9d
+nokia-infra-altiplano-ingress-v4x29                              1/1     Running   0            9d
+nokia-infra-altiplano-mariadb-mariadb-0                          4/4     Running   0            9d
+nokia-infra-altiplano-oauth2-proxy-68654fc5cf-7bbjc              1/1     Running   0            9d
+nokia-infra-altiplano-oauth2-proxy-nbi-6876846ddf-kc4wx          1/1     Running   0            9d
+nokia-infra-altiplano-opentsdb-67f547c9fb-x5knx                  4/4     Running   0            9d
+nokia-infra-altiplano-pts-alertmanager-749748666b-xptkj          3/3     Running   0            9d
+nokia-infra-altiplano-pts-kube-state-metrics-64b544998b-bmdjp    1/1     Running   0            9d
+nokia-infra-altiplano-pts-node-exporter-mjnfh                    1/1     Running   0            9d
+nokia-infra-altiplano-redis-admin-5f9db4f8b5-b2s4k               1/1     Running   0            9d
+nokia-infra-altiplano-redis-server-0                             2/2     Running   0            9d
+nokia-infra-altiplano-webdav-6f9474dd6-t4xrz                     2/2     Running   0            9d
+nokia-infra-default404-5b48988689-nhdrg                          1/1     Running   0            9d
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ kubectl edit statefulsets.apps altiplano-nta-altiplano-trend-analyzer
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    meta.helm.sh/release-name: altiplano-nta
+    meta.helm.sh/release-namespace: default
+  creationTimestamp: "2025-08-20T08:43:49Z"
+  generation: 4
+  labels:
+    app: altiplano-trend-analyzer
+    app.kubernetes.io/managed-by: Helm
+    chart: altiplano-trend-analyzer-24.12.0-REL-0009
+    heritage: Helm
+    release: altiplano-nta
+  name: altiplano-nta-altiplano-trend-analyzer
+  namespace: default
+  resourceVersion: "9974471"
+  uid: e5402fd0-e9dc-4728-8e94-8eed01ca824e
+spec:
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  podManagementPolicy: OrderedReady
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+      release: altiplano-nta
+  serviceName: altiplano-nta-altiplano-trend-analyzer
+  template:
+        release: altiplano-nta
+        - name: CA_CERT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          value: nokia
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        - name: MAX_NUMBER_OF_PENDING_REQUESTS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Edit cancelled, no changes made.
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ kubectl delete pods altiplano-nta-altiplano-trend-analyzer-0 
+pod "altiplano-nta-altiplano-trend-analyzer-0" deleted
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ kubectl get pods 
+NAME                                                             READY   STATUS    RESTARTS     AGE
+altiplano-fha-d5489c5d4-bszd9                                    2/2     Running   0            9d
+altiplano-kafka-0                                                2/2     Running   0            9d
+altiplano-nspos-rabbitmq-0                                       1/1     Running   0            9d
+altiplano-nta-altiplano-trend-analyzer-0                         0/1     Running   0            23s
+altiplano-pcp-8556fdd7ff-dpw68                                   1/1     Running   8 (9d ago)   9d
+altiplano-ptm-altiplano-passive-topology-5fdb475c95-d9t4v        1/1     Running   4 (9d ago)   9d
+altiplano-pts-pushgateway-7cd75d856d-jcdx8                       1/1     Running   0            9d
+altiplano-pts-server-5ff8c46494-pk2vw                            4/4     Running   0            9d
+altiplano-sso-0                                                  2/2     Running   0            9d
+altiplano-zookeeper-0                                            2/2     Running   0            9d
+nokia-altiplano-ac-6bd994676d-ftnns                              1/1     Running   0            9d
+nokia-altiplano-alarmisbridge-5bb89dd478-4qnpz                   1/1     Running   0            9d
+nokia-altiplano-av-7f4dfb8977-c2l7c                              1/1     Running   0            9d
+nokia-altiplano-cliadapterac-7bb4d8785c-nwqfl                    1/1     Running   0            9d
+nokia-altiplano-cliadapterav-667949fff7-sw2zx                    1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-8zdg7                1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-db9mq                1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-rjdzz                1/1     Running   0            9d
+nokia-altiplano-healthengine-6d5fd944f4-fdx65                    1/1     Running   0            9d
+nokia-altiplano-healthtoisbridge-74fcc74dc5-n9brq                1/1     Running   0            9d
+nokia-altiplano-ipfixbecollector-77cc75df8f-k7qsf                1/1     Running   0            9d
+nokia-altiplano-ipfixfecollector-65b6895454-cb4pf                1/1     Running   0            9d
+nokia-altiplano-nclivecollector-69d4b45bdd-gkb2q                 1/1     Running   0            9d
+nokia-altiplano-netconfinventorycollector-76f9fdb646-vj992       1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-api-default-6b88d5df7d-jbjth         1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-engine-default-7c4cb4f4fb-p4pz6      1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-engine-triggers-66fdcf5dfb-pgqfw     1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-executor-default-7cdc8579d5-8hlmh    1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-executor-triggers-8489ddb4f7-6wpwh   1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-notifier-default-6d87c9bc4d-pgzfk    1/1     Running   0            9d
+nokia-altiplano-nspos-app3-tomcat-5967cfc4fb-m2hjg               1/1     Running   0            9d
+nokia-altiplano-pm-scheduler-778986f7b5-4bjbb                    1/1     Running   0            9d
+nokia-altiplano-pmfilegenerator-595f6b8df9-z496h                 1/1     Running   0            9d
+nokia-altiplano-snmp-trap-forwarder-6fb4d9c567-6lstv             1/1     Running   0            9d
+nokia-altiplano-soapadapter-bb6667b54-26qnp                      1/1     Running   0            9d
+nokia-altiplano-tcaengine-f6fdb75dc-r5tgx                        1/1     Running   1 (9d ago)   9d
+nokia-infra-altiplano-backup-restore-helper-74d69b895c-7t9vb     1/1     Running   0            9d
+nokia-infra-altiplano-cbur-74b4d4f5dd-8xfjr                      3/3     Running   0            9d
+nokia-infra-altiplano-cbur-k8swatcher-65c79498ff-w779r           2/2     Running   0            9d
+nokia-infra-altiplano-cbur-mycelery-674576d948-qltlm             3/3     Running   0            9d
+nokia-infra-altiplano-fluentd-ds-52bpf                           1/1     Running   0            9d
+nokia-infra-altiplano-grafana-0                                  4/4     Running   2 (9d ago)   9d
+nokia-infra-altiplano-hbase-master-0                             3/3     Running   0            9d
+nokia-infra-altiplano-hbase-regionserver-0                       2/2     Running   0            9d
+nokia-infra-altiplano-hdfs-datanode-0                            2/2     Running   0            9d
+nokia-infra-altiplano-hdfs-namenode-0                            2/2     Running   0            9d
+nokia-infra-altiplano-indexsearch-client-7fcf4b6867-7mn68        1/1     Running   0            9d
+nokia-infra-altiplano-indexsearch-dashboards-77b5fc794b-md6hl    1/1     Running   0            9d
+nokia-infra-altiplano-indexsearch-data-0                         2/2     Running   0            9d
+nokia-infra-altiplano-indexsearch-manager-0                      1/1     Running   0            9d
+nokia-infra-altiplano-ingress-v4x29                              1/1     Running   0            9d
+nokia-infra-altiplano-mariadb-mariadb-0                          4/4     Running   0            9d
+nokia-infra-altiplano-oauth2-proxy-68654fc5cf-7bbjc              1/1     Running   0            9d
+nokia-infra-altiplano-oauth2-proxy-nbi-6876846ddf-kc4wx          1/1     Running   0            9d
+nokia-infra-altiplano-opentsdb-67f547c9fb-x5knx                  4/4     Running   0            9d
+nokia-infra-altiplano-pts-alertmanager-749748666b-xptkj          3/3     Running   0            9d
+nokia-infra-altiplano-pts-kube-state-metrics-64b544998b-bmdjp    1/1     Running   0            9d
+nokia-infra-altiplano-pts-node-exporter-mjnfh                    1/1     Running   0            9d
+nokia-infra-altiplano-redis-admin-5f9db4f8b5-b2s4k               1/1     Running   0            9d
+nokia-infra-altiplano-redis-server-0                             2/2     Running   0            9d
+nokia-infra-altiplano-webdav-6f9474dd6-t4xrz                     2/2     Running   0            9d
+nokia-infra-default404-5b48988689-nhdrg                          1/1     Running   0            9d
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ kubectl get pods 
+NAME                                                             READY   STATUS    RESTARTS     AGE
+altiplano-fha-d5489c5d4-bszd9                                    2/2     Running   0            9d
+altiplano-kafka-0                                                2/2     Running   0            9d
+altiplano-nspos-rabbitmq-0                                       1/1     Running   0            9d
+altiplano-nta-altiplano-trend-analyzer-0                         0/1     Running   0            31s
+altiplano-pcp-8556fdd7ff-dpw68                                   1/1     Running   8 (9d ago)   9d
+altiplano-ptm-altiplano-passive-topology-5fdb475c95-d9t4v        1/1     Running   4 (9d ago)   9d
+altiplano-pts-pushgateway-7cd75d856d-jcdx8                       1/1     Running   0            9d
+altiplano-pts-server-5ff8c46494-pk2vw                            4/4     Running   0            9d
+altiplano-sso-0                                                  2/2     Running   0            9d
+altiplano-zookeeper-0                                            2/2     Running   0            9d
+nokia-altiplano-ac-6bd994676d-ftnns                              1/1     Running   0            9d
+nokia-altiplano-alarmisbridge-5bb89dd478-4qnpz                   1/1     Running   0            9d
+nokia-altiplano-av-7f4dfb8977-c2l7c                              1/1     Running   0            9d
+nokia-altiplano-cliadapterac-7bb4d8785c-nwqfl                    1/1     Running   0            9d
+nokia-altiplano-cliadapterav-667949fff7-sw2zx                    1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-8zdg7                1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-db9mq                1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-rjdzz                1/1     Running   0            9d
+nokia-altiplano-healthengine-6d5fd944f4-fdx65                    1/1     Running   0            9d
+nokia-altiplano-healthtoisbridge-74fcc74dc5-n9brq                1/1     Running   0            9d
+nokia-altiplano-ipfixbecollector-77cc75df8f-k7qsf                1/1     Running   0            9d
+nokia-altiplano-ipfixfecollector-65b6895454-cb4pf                1/1     Running   0            9d
+nokia-altiplano-nclivecollector-69d4b45bdd-gkb2q                 1/1     Running   0            9d
+nokia-altiplano-netconfinventorycollector-76f9fdb646-vj992       1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-api-default-6b88d5df7d-jbjth         1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-engine-default-7c4cb4f4fb-p4pz6      1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-engine-triggers-66fdcf5dfb-pgqfw     1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-executor-default-7cdc8579d5-8hlmh    1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-executor-triggers-8489ddb4f7-6wpwh   1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-notifier-default-6d87c9bc4d-pgzfk    1/1     Running   0            9d
+nokia-altiplano-nspos-app3-tomcat-5967cfc4fb-m2hjg               1/1     Running   0            9d
+nokia-altiplano-pm-scheduler-778986f7b5-4bjbb                    1/1     Running   0            9d
+nokia-altiplano-pmfilegenerator-595f6b8df9-z496h                 1/1     Running   0            9d
+nokia-altiplano-snmp-trap-forwarder-6fb4d9c567-6lstv             1/1     Running   0            9d
+nokia-altiplano-soapadapter-bb6667b54-26qnp                      1/1     Running   0            9d
+nokia-altiplano-tcaengine-f6fdb75dc-r5tgx                        1/1     Running   1 (9d ago)   9d
+nokia-infra-altiplano-backup-restore-helper-74d69b895c-7t9vb     1/1     Running   0            9d
+nokia-infra-altiplano-cbur-74b4d4f5dd-8xfjr                      3/3     Running   0            9d
+nokia-infra-altiplano-cbur-k8swatcher-65c79498ff-w779r           2/2     Running   0            9d
+nokia-infra-altiplano-cbur-mycelery-674576d948-qltlm             3/3     Running   0            9d
+nokia-infra-altiplano-fluentd-ds-52bpf                           1/1     Running   0            9d
+nokia-infra-altiplano-grafana-0                                  4/4     Running   2 (9d ago)   9d
+nokia-infra-altiplano-hbase-master-0                             3/3     Running   0            9d
+nokia-infra-altiplano-hbase-regionserver-0                       2/2     Running   0            9d
+nokia-infra-altiplano-hdfs-datanode-0                            2/2     Running   0            9d
+nokia-infra-altiplano-hdfs-namenode-0                            2/2     Running   0            9d
+nokia-infra-altiplano-indexsearch-client-7fcf4b6867-7mn68        1/1     Running   0            9d
+nokia-infra-altiplano-indexsearch-dashboards-77b5fc794b-md6hl    1/1     Running   0            9d
+nokia-infra-altiplano-indexsearch-data-0                         2/2     Running   0            9d
+nokia-infra-altiplano-indexsearch-manager-0                      1/1     Running   0            9d
+nokia-infra-altiplano-ingress-v4x29                              1/1     Running   0            9d
+nokia-infra-altiplano-mariadb-mariadb-0                          4/4     Running   0            9d
+nokia-infra-altiplano-oauth2-proxy-68654fc5cf-7bbjc              1/1     Running   0            9d
+nokia-infra-altiplano-oauth2-proxy-nbi-6876846ddf-kc4wx          1/1     Running   0            9d
+nokia-infra-altiplano-opentsdb-67f547c9fb-x5knx                  4/4     Running   0            9d
+nokia-infra-altiplano-pts-alertmanager-749748666b-xptkj          3/3     Running   0            9d
+nokia-infra-altiplano-pts-kube-state-metrics-64b544998b-bmdjp    1/1     Running   0            9d
+nokia-infra-altiplano-pts-node-exporter-mjnfh                    1/1     Running   0            9d
+nokia-infra-altiplano-redis-admin-5f9db4f8b5-b2s4k               1/1     Running   0            9d
+nokia-infra-altiplano-redis-server-0                             2/2     Running   0            9d
+nokia-infra-altiplano-webdav-6f9474dd6-t4xrz                     2/2     Running   0            9d
+nokia-infra-default404-5b48988689-nhdrg                          1/1     Running   0            9d
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ kubectl get pods 
+NAME                                                             READY   STATUS    RESTARTS     AGE
+altiplano-fha-d5489c5d4-bszd9                                    2/2     Running   0            9d
+altiplano-kafka-0                                                2/2     Running   0            9d
+altiplano-nspos-rabbitmq-0                                       1/1     Running   0            9d
+altiplano-nta-altiplano-trend-analyzer-0                         1/1     Running   0            2m22s
+altiplano-pcp-8556fdd7ff-dpw68                                   1/1     Running   8 (9d ago)   9d
+altiplano-ptm-altiplano-passive-topology-5fdb475c95-d9t4v        1/1     Running   4 (9d ago)   9d
+altiplano-pts-pushgateway-7cd75d856d-jcdx8                       1/1     Running   0            9d
+altiplano-pts-server-5ff8c46494-pk2vw                            4/4     Running   0            9d
+altiplano-sso-0                                                  2/2     Running   0            9d
+altiplano-zookeeper-0                                            2/2     Running   0            9d
+nokia-altiplano-ac-6bd994676d-ftnns                              1/1     Running   0            9d
+nokia-altiplano-alarmisbridge-5bb89dd478-4qnpz                   1/1     Running   0            9d
+nokia-altiplano-av-7f4dfb8977-c2l7c                              1/1     Running   0            9d
+nokia-altiplano-cliadapterac-7bb4d8785c-nwqfl                    1/1     Running   0            9d
+nokia-altiplano-cliadapterav-667949fff7-sw2zx                    1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-8zdg7                1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-db9mq                1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-rjdzz                1/1     Running   0            9d
+nokia-altiplano-healthengine-6d5fd944f4-fdx65                    1/1     Running   0            9d
+nokia-altiplano-healthtoisbridge-74fcc74dc5-n9brq                1/1     Running   0            9d
+nokia-altiplano-ipfixbecollector-77cc75df8f-k7qsf                1/1     Running   0            9d
+nokia-altiplano-ipfixfecollector-65b6895454-cb4pf                1/1     Running   0            9d
+nokia-altiplano-nclivecollector-69d4b45bdd-gkb2q                 1/1     Running   0            9d
+nokia-altiplano-netconfinventorycollector-76f9fdb646-vj992       1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-api-default-6b88d5df7d-jbjth         1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-engine-default-7c4cb4f4fb-p4pz6      1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-engine-triggers-66fdcf5dfb-pgqfw     1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-executor-default-7cdc8579d5-8hlmh    1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-executor-triggers-8489ddb4f7-6wpwh   1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-notifier-default-6d87c9bc4d-pgzfk    1/1     Running   0            9d
+nokia-altiplano-nspos-app3-tomcat-5967cfc4fb-m2hjg               1/1     Running   0            9d
+nokia-altiplano-pm-scheduler-778986f7b5-4bjbb                    1/1     Running   0            9d
+nokia-altiplano-pmfilegenerator-595f6b8df9-z496h                 1/1     Running   0            9d
+nokia-altiplano-snmp-trap-forwarder-6fb4d9c567-6lstv             1/1     Running   0            9d
+nokia-altiplano-soapadapter-bb6667b54-26qnp                      1/1     Running   0            9d
+nokia-altiplano-tcaengine-f6fdb75dc-r5tgx                        1/1     Running   1 (9d ago)   9d
+nokia-infra-altiplano-backup-restore-helper-74d69b895c-7t9vb     1/1     Running   0            9d
+nokia-infra-altiplano-cbur-74b4d4f5dd-8xfjr                      3/3     Running   0            9d
+nokia-infra-altiplano-cbur-k8swatcher-65c79498ff-w779r           2/2     Running   0            9d
+nokia-infra-altiplano-cbur-mycelery-674576d948-qltlm             3/3     Running   0            9d
+nokia-infra-altiplano-fluentd-ds-52bpf                           1/1     Running   0            9d
+nokia-infra-altiplano-grafana-0                                  4/4     Running   2 (9d ago)   9d
+nokia-infra-altiplano-hbase-master-0                             3/3     Running   0            9d
+nokia-infra-altiplano-hbase-regionserver-0                       2/2     Running   0            9d
+nokia-infra-altiplano-hdfs-datanode-0                            2/2     Running   0            9d
+nokia-infra-altiplano-hdfs-namenode-0                            2/2     Running   0            9d
+nokia-infra-altiplano-indexsearch-client-7fcf4b6867-7mn68        1/1     Running   0            9d
+nokia-infra-altiplano-indexsearch-dashboards-77b5fc794b-md6hl    1/1     Running   0            9d
+nokia-infra-altiplano-indexsearch-data-0                         2/2     Running   0            9d
+nokia-infra-altiplano-indexsearch-manager-0                      1/1     Running   0            9d
+nokia-infra-altiplano-ingress-v4x29                              1/1     Running   0            9d
+nokia-infra-altiplano-mariadb-mariadb-0                          4/4     Running   0            9d
+nokia-infra-altiplano-oauth2-proxy-68654fc5cf-7bbjc              1/1     Running   0            9d
+nokia-infra-altiplano-oauth2-proxy-nbi-6876846ddf-kc4wx          1/1     Running   0            9d
+nokia-infra-altiplano-opentsdb-67f547c9fb-x5knx                  4/4     Running   0            9d
+nokia-infra-altiplano-pts-alertmanager-749748666b-xptkj          3/3     Running   0            9d
+nokia-infra-altiplano-pts-kube-state-metrics-64b544998b-bmdjp    1/1     Running   0            9d
+nokia-infra-altiplano-pts-node-exporter-mjnfh                    1/1     Running   0            9d
+nokia-infra-altiplano-redis-admin-5f9db4f8b5-b2s4k               1/1     Running   0            9d
+nokia-infra-altiplano-redis-server-0                             2/2     Running   0            9d
+nokia-infra-altiplano-webdav-6f9474dd6-t4xrz                     2/2     Running   0            9d
+nokia-infra-default404-5b48988689-nhdrg                          1/1     Running   0            9d
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ kubectl delete pods altiplano-nta-altiplano-trend-analyzer-0 
+pod "altiplano-nta-altiplano-trend-analyzer-0" deleted
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ kubectl get pods 
+NAME                                                             READY   STATUS    RESTARTS     AGE
+altiplano-fha-d5489c5d4-bszd9                                    2/2     Running   0            9d
+altiplano-kafka-0                                                2/2     Running   0            9d
+altiplano-nspos-rabbitmq-0                                       1/1     Running   0            9d
+altiplano-nta-altiplano-trend-analyzer-0                         0/1     Running   0            18s
+altiplano-pcp-8556fdd7ff-dpw68                                   1/1     Running   8 (9d ago)   9d
+altiplano-ptm-altiplano-passive-topology-5fdb475c95-d9t4v        1/1     Running   4 (9d ago)   9d
+altiplano-pts-pushgateway-7cd75d856d-jcdx8                       1/1     Running   0            9d
+altiplano-pts-server-5ff8c46494-pk2vw                            4/4     Running   0            9d
+altiplano-sso-0                                                  2/2     Running   0            9d
+altiplano-zookeeper-0                                            2/2     Running   0            9d
+nokia-altiplano-ac-6bd994676d-ftnns                              1/1     Running   0            9d
+nokia-altiplano-alarmisbridge-5bb89dd478-4qnpz                   1/1     Running   0            9d
+nokia-altiplano-av-7f4dfb8977-c2l7c                              1/1     Running   0            9d
+nokia-altiplano-cliadapterac-7bb4d8785c-nwqfl                    1/1     Running   0            9d
+nokia-altiplano-cliadapterav-667949fff7-sw2zx                    1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-8zdg7                1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-db9mq                1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-rjdzz                1/1     Running   0            9d
+nokia-altiplano-healthengine-6d5fd944f4-fdx65                    1/1     Running   0            9d
+nokia-altiplano-healthtoisbridge-74fcc74dc5-n9brq                1/1     Running   0            9d
+nokia-altiplano-ipfixbecollector-77cc75df8f-k7qsf                1/1     Running   0            9d
+nokia-altiplano-ipfixfecollector-65b6895454-cb4pf                1/1     Running   0            9d
+nokia-altiplano-nclivecollector-69d4b45bdd-gkb2q                 1/1     Running   0            9d
+nokia-altiplano-netconfinventorycollector-76f9fdb646-vj992       1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-api-default-6b88d5df7d-jbjth         1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-engine-default-7c4cb4f4fb-p4pz6      1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-engine-triggers-66fdcf5dfb-pgqfw     1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-executor-default-7cdc8579d5-8hlmh    1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-executor-triggers-8489ddb4f7-6wpwh   1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-notifier-default-6d87c9bc4d-pgzfk    1/1     Running   0            9d
+nokia-altiplano-nspos-app3-tomcat-5967cfc4fb-m2hjg               1/1     Running   0            9d
+nokia-altiplano-pm-scheduler-778986f7b5-4bjbb                    1/1     Running   0            9d
+nokia-altiplano-pmfilegenerator-595f6b8df9-z496h                 1/1     Running   0            9d
+nokia-altiplano-snmp-trap-forwarder-6fb4d9c567-6lstv             1/1     Running   0            9d
+nokia-altiplano-soapadapter-bb6667b54-26qnp                      1/1     Running   0            9d
+nokia-altiplano-tcaengine-f6fdb75dc-r5tgx                        1/1     Running   1 (9d ago)   9d
+nokia-infra-altiplano-backup-restore-helper-74d69b895c-7t9vb     1/1     Running   0            9d
+nokia-infra-altiplano-cbur-74b4d4f5dd-8xfjr                      3/3     Running   0            9d
+nokia-infra-altiplano-cbur-k8swatcher-65c79498ff-w779r           2/2     Running   0            9d
+nokia-infra-altiplano-cbur-mycelery-674576d948-qltlm             3/3     Running   0            9d
+nokia-infra-altiplano-fluentd-ds-52bpf                           1/1     Running   0            9d
+nokia-infra-altiplano-grafana-0                                  4/4     Running   2 (9d ago)   9d
+nokia-infra-altiplano-hbase-master-0                             3/3     Running   0            9d
+nokia-infra-altiplano-hbase-regionserver-0                       2/2     Running   0            9d
+nokia-infra-altiplano-hdfs-datanode-0                            2/2     Running   0            9d
+nokia-infra-altiplano-hdfs-namenode-0                            2/2     Running   0            9d
+nokia-infra-altiplano-indexsearch-client-7fcf4b6867-7mn68        1/1     Running   0            9d
+nokia-infra-altiplano-indexsearch-dashboards-77b5fc794b-md6hl    1/1     Running   0            9d
+nokia-infra-altiplano-indexsearch-data-0                         2/2     Running   0            9d
+nokia-infra-altiplano-indexsearch-manager-0                      1/1     Running   0            9d
+nokia-infra-altiplano-ingress-v4x29                              1/1     Running   0            9d
+nokia-infra-altiplano-mariadb-mariadb-0                          4/4     Running   0            9d
+nokia-infra-altiplano-oauth2-proxy-68654fc5cf-7bbjc              1/1     Running   0            9d
+nokia-infra-altiplano-oauth2-proxy-nbi-6876846ddf-kc4wx          1/1     Running   0            9d
+nokia-infra-altiplano-opentsdb-67f547c9fb-x5knx                  4/4     Running   0            9d
+nokia-infra-altiplano-pts-alertmanager-749748666b-xptkj          3/3     Running   0            9d
+nokia-infra-altiplano-pts-kube-state-metrics-64b544998b-bmdjp    1/1     Running   0            9d
+nokia-infra-altiplano-pts-node-exporter-mjnfh                    1/1     Running   0            9d
+nokia-infra-altiplano-redis-admin-5f9db4f8b5-b2s4k               1/1     Running   0            9d
+nokia-infra-altiplano-redis-server-0                             2/2     Running   0            9d
+nokia-infra-altiplano-webdav-6f9474dd6-t4xrz                     2/2     Running   0            9d
+nokia-infra-default404-5b48988689-nhdrg                          1/1     Running   0            9d
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ 
+altiplano@altiplano:~$ kubectl get pods 
+NAME                                                             READY   STATUS    RESTARTS     AGE
+altiplano-fha-d5489c5d4-bszd9                                    2/2     Running   0            9d
+altiplano-kafka-0                                                2/2     Running   0            9d
+altiplano-nspos-rabbitmq-0                                       1/1     Running   0            9d
+altiplano-nta-altiplano-trend-analyzer-0                         1/1     Running   0            2m58s
+altiplano-pcp-8556fdd7ff-dpw68                                   1/1     Running   8 (9d ago)   9d
+altiplano-ptm-altiplano-passive-topology-5fdb475c95-d9t4v        1/1     Running   4 (9d ago)   9d
+altiplano-pts-pushgateway-7cd75d856d-jcdx8                       1/1     Running   0            9d
+altiplano-pts-server-5ff8c46494-pk2vw                            4/4     Running   0            9d
+altiplano-sso-0                                                  2/2     Running   0            9d
+altiplano-zookeeper-0                                            2/2     Running   0            9d
+nokia-altiplano-ac-6bd994676d-ftnns                              1/1     Running   0            9d
+nokia-altiplano-alarmisbridge-5bb89dd478-4qnpz                   1/1     Running   0            9d
+nokia-altiplano-av-7f4dfb8977-c2l7c                              1/1     Running   0            9d
+nokia-altiplano-cliadapterac-7bb4d8785c-nwqfl                    1/1     Running   0            9d
+nokia-altiplano-cliadapterav-667949fff7-sw2zx                    1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-8zdg7                1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-db9mq                1/1     Running   0            9d
+nokia-altiplano-device-migration-67c6fb94b8-rjdzz                1/1     Running   0            9d
+nokia-altiplano-healthengine-6d5fd944f4-fdx65                    1/1     Running   0            9d
+nokia-altiplano-healthtoisbridge-74fcc74dc5-n9brq                1/1     Running   0            9d
+nokia-altiplano-ipfixbecollector-77cc75df8f-k7qsf                1/1     Running   0            9d
+nokia-altiplano-ipfixfecollector-65b6895454-cb4pf                1/1     Running   0            9d
+nokia-altiplano-nclivecollector-69d4b45bdd-gkb2q                 1/1     Running   0            9d
+nokia-altiplano-netconfinventorycollector-76f9fdb646-vj992       1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-api-default-6b88d5df7d-jbjth         1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-engine-default-7c4cb4f4fb-p4pz6      1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-engine-triggers-66fdcf5dfb-pgqfw     1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-executor-default-7cdc8579d5-8hlmh    1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-executor-triggers-8489ddb4f7-6wpwh   1/1     Running   0            9d
+nokia-altiplano-nsp-mistral-notifier-default-6d87c9bc4d-pgzfk    1/1     Running   0            9d
+nokia-altiplano-nspos-app3-tomcat-5967cfc4fb-m2hjg               1/1     Running   0            9d
+nokia-altiplano-pm-scheduler-778986f7b5-4bjbb                    1/1     Running   0            9d
+nokia-altiplano-pmfilegenerator-595f6b8df9-z496h                 1/1     Running   0            9d
+nokia-altiplano-snmp-trap-forwarder-6fb4d9c567-6lstv             1/1     Running   0            9d
+nokia-altiplano-soapadapter-bb6667b54-26qnp                      1/1     Running   0            9d
+nokia-altiplano-tcaengine-f6fdb75dc-r5tgx                        1/1     Running   1 (9d ago)   9d
+nokia-infra-altiplano-backup-restore-helper-74d69b895c-7t9vb     1/1     Running   0            9d
+nokia-infra-altiplano-cbur-74b4d4f5dd-8xfjr                      3/3     Running   0            9d
+nokia-infra-altiplano-cbur-k8swatcher-65c79498ff-w779r           2/2     Running   0            9d
+nokia-infra-altiplano-cbur-mycelery-674576d948-qltlm             3/3     Running   0            9d
+nokia-infra-altiplano-fluentd-ds-52bpf                           1/1     Running   0            9d
+nokia-infra-altiplano-grafana-0                                  4/4     Running   2 (9d ago)   9d
+nokia-infra-altiplano-hbase-master-0                             3/3     Running   0            9d
+nokia-infra-altiplano-hbase-regionserver-0                       2/2     Running   0            9d
+nokia-infra-altiplano-hdfs-datanode-0                            2/2     Running   0            9d
+nokia-infra-altiplano-hdfs-namenode-0                            2/2     Running   0            9d
+nokia-infra-altiplano-indexsearch-client-7fcf4b6867-7mn68        1/1     Running   0            9d
+nokia-infra-altiplano-indexsearch-dashboards-77b5fc794b-md6hl    1/1     Running   0            9d
+nokia-infra-altiplano-indexsearch-data-0                         2/2     Running   0            9d
+nokia-infra-altiplano-indexsearch-manager-0                      1/1     Running   0            9d
+nokia-infra-altiplano-ingress-v4x29                              1/1     Running   0            9d
+nokia-infra-altiplano-mariadb-mariadb-0                          4/4     Running   0            9d
+nokia-infra-altiplano-oauth2-proxy-68654fc5cf-7bbjc              1/1     Running   0            9d
+nokia-infra-altiplano-oauth2-proxy-nbi-6876846ddf-kc4wx          1/1     Running   0            9d
+nokia-infra-altiplano-opentsdb-67f547c9fb-x5knx                  4/4     Running   0            9d
+nokia-infra-altiplano-pts-alertmanager-749748666b-xptkj          3/3     Running   0            9d
+nokia-infra-altiplano-pts-kube-state-metrics-64b544998b-bmdjp    1/1     Running   0            9d
+nokia-infra-altiplano-pts-node-exporter-mjnfh                    1/1     Running   0            9d
+nokia-infra-altiplano-redis-admin-5f9db4f8b5-b2s4k               1/1     Running   0            9d
+nokia-infra-altiplano-redis-server-0                             2/2     Running   0            9d
+nokia-infra-altiplano-webdav-6f9474dd6-t4xrz                     2/2     Running   0            9d
+nokia-infra-default404-5b48988689-nhdrg                          1/1     Running   0            9d
