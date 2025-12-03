@@ -1,0 +1,984 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<clientConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="uri://alcatel.com/axs/app/sdccollectionmodel/xml/schema"
+              xsi:schemaLocation="uri://alcatel.com/axs/app/sdc/xml/schema ../../../../../../server/axs-sdc-schemas/src/main/xsd/sdccollectionmodel.xsd">
+    <signature key=""/>
+    <!-- extra meta tag -->
+
+    <modelmeta modelName="fiber" modelType="std" modelVersion="1.0.0" description="IPFIX collection model for xpon devices" family="LS-FX-FWLT-C-23.12" collectorType="IPFIX" destination="kafka,openTSDB" topic="IPFIX-XPON" periodicity="PT15M" author="Nokia" date="20-Dec-2023 07:23" build="23.12.0-REL_127"/>
+
+    <alarms>
+        <alarm alarmTypeId="in-discards-threshold-crossed-alarm" perceivedSeverity="Minor"/>
+        <alarm alarmTypeId="out-discards-threshold-crossed-alarm" perceivedSeverity="Minor"/>
+        <alarm alarmTypeId="in-drop-events-threshold-crossed-alarm" perceivedSeverity="Minor"/>
+        <alarm alarmTypeId="out-drop-events-threshold-crossed-alarm" perceivedSeverity="Minor"/>
+        <alarm alarmTypeId="in-crc-errored-pkts-threshold-crossed-alarm" perceivedSeverity="Minor"/>
+        <alarm alarmTypeId="out-crc-errored-pkts-threshold-crossed-alarm" perceivedSeverity="Minor"/>
+        <alarm alarmTypeId="in-undersize-pkts-threshold-crossed-alarm" perceivedSeverity="Minor"/>
+        <alarm alarmTypeId="out-undersize-pkts-threshold-crossed-alarm" perceivedSeverity="Minor"/>
+        <alarm alarmTypeId="in-oversize-pkts-threshold-crossed-alarm" perceivedSeverity="Minor"/>
+        <alarm alarmTypeId="out-oversize-pkts-threshold-crossed-alarm" perceivedSeverity="Minor"/>
+        <alarm alarmTypeId="dba-congestion-rate-threshold-crossed-alarm-minor" perceivedSeverity="Minor"/>
+        <alarm alarmTypeId="dba-congestion-rate-threshold-crossed-alarm-major" perceivedSeverity="Major"/>
+        <alarm alarmTypeId="xpon-downstream-ploam-messages-threshold-crossed-alarm-major" perceivedSeverity="Major"/>
+        <alarm alarmTypeId="xpon-upstream-ploam-messages-threshold-crossed-alarm-major" perceivedSeverity="Major"/>
+		<alarm alarmTypeId="pon-receive-unicast-packets-prediction-alert" perceivedSeverity="Major"/>
+    </alarms>
+
+    <collectedCounters>
+        <!-- hardware-state -->
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="state/admin-state"
+                 counterGuiName="Administrative State" collected="Y" isAdmin="Y">
+            <enumMapping>
+                <enum name="enum1" value="1" guiName="Locked"/>
+                <enum name="enum2" value="1" guiName="Locked"/>
+                <enum name="enum3" value="1" guiName="Locked"/>
+                <enum name="enum4" value="0" guiName="Unlocked"/>
+            </enumMapping>
+        </counter>
+
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="state/oper-state"
+                 counterGuiName="Operational State" collected="Y" isOper="Y">
+            <enumMapping>
+                <enum name="enum1" value="1" guiName="Down"/>
+                <enum name="enum2" value="1" guiName="Down"/>
+                <enum name="enum3" value="0" guiName="Up"/>
+                <enum name="enum4" value="1" guiName="Down"/>
+            </enumMapping>
+        </counter>
+        <!-- hardware-state-sensor -->
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="sensor-data/value"
+                 counterGuiName="Sensor - Temperature/Speed" unit="deg C/rpm"  collected="Y">        </counter>
+        <!-- interfaces-state -->
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="admin-status"
+                 counterGuiName="Administrative State" collected="Y" isAdmin="Y">
+            <enumMapping>
+                <enum name="enum1" value="0" guiName="Unlocked"/>
+                <enum name="enum2" value="1" guiName="Locked"/>
+                <enum name="enum3" value="1" guiName="Locked"/>
+            </enumMapping>
+        </counter>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="oper-status"
+                 counterGuiName="Operational State" collected="Y" isOper="Y">
+            <enumMapping>
+                <enum name="enum1" value="0" guiName="Up"/>
+                <enum name="enum2" value="1" guiName="Down"/>
+                <enum name="enum3" value="1" guiName="Down"/>
+                <enum name="enum4" value="1" guiName="Down"/>
+                <enum name="enum5" value="1" guiName="Down"/>
+                <enum name="enum6" value="1" guiName="Down"/>
+                <enum name="enum7" value="1" guiName="Down"/>
+            </enumMapping>
+        </counter>
+        <!-- interfaces-state-dhcpv4-relay -->
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-l2-dhcpv4-relay:dhcpv4/in-bad-packets-from-client"
+                 counterGuiName="Inbound Bad Packets From Client - DHCPv4" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-l2-dhcpv4-relay:dhcpv4/in-bad-packets-from-server"
+                 counterGuiName="Inbound Bad Packets From Server - DHCPv4" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-l2-dhcpv4-relay:dhcpv4/in-packets-from-client"
+                 counterGuiName="Inbound Valid Packets From Client" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-l2-dhcpv4-relay:dhcpv4/in-packets-from-server"
+                 counterGuiName="Inbound Valid Packets From Server" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-l2-dhcpv4-relay:dhcpv4/out-packets-to-server"
+                 counterGuiName="Outbound Valid Packets to Server" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-l2-dhcpv4-relay:dhcpv4/out-packets-to-client"
+                 counterGuiName="Outbound Valid Packets to Client" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-l2-dhcpv4-relay:dhcpv4/option-82-inserted-packets-to-server"
+                 counterGuiName="Option 82 Packets to Server" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-l2-dhcpv4-relay:dhcpv4/option-82-removed-packets-to-client"
+                 counterGuiName="Option 82 Removed Packets to Client" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-l2-dhcpv4-relay:dhcpv4/option-82-not-inserted-to-server"
+                 counterGuiName="MTU Exceeded" collected="Y"/>
+
+
+        <!-- interfaces-state-pppoe-->
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-pppoe-intermediate-agent:pppoe/in-error-packets-from-client"
+                 counterGuiName="Inbound Error Packets" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-pppoe-intermediate-agent:pppoe/in-packets-from-client"
+                 counterGuiName="Inbound Valid Packets" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-pppoe-intermediate-agent:pppoe/out-packets-to-server"
+                 counterGuiName="Outbound Valid Packets" collected="Y"/>
+
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-pppoe-intermediate-agent:pppoe/vendor-specific-tag-inserted-packets-to-server"
+                 counterGuiName="Packets with Vendor Specific Tag" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-pppoe-intermediate-agent:pppoe/outgoing-mtu-exceeded-packets-from-client"
+                 counterGuiName="MTU Exceeded Packets" collected="Y"/>
+
+        <!-- interfaces-state-statistics-->
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/in-octets"
+                 counterGuiName="Inbound Octets" collected="Y" unit="bytes"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/out-octets"
+                 counterGuiName="Outbound Octets" collected="Y" unit="bytes"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/in-discards"
+                 counterGuiName="Inbound Discards" tca="N" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/out-discards"
+                 counterGuiName="Outbound Discards" tca="N" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/in-unicast-pkts"
+                 counterGuiName="Inbound Unicast Packets" collected="Y" tca="Y">
+		<thresholds>
+                <threshold operator="gt" alarmTypeId="pon-receive-unicast-packets-prediction-alert">
+                    <discoveryMethod>
+                        <timeSeriesAnalysis offset="-20" window="4">
+                            <argument name="interval_width" value="0.8"/>
+                            <argument name="yearly_seasonality" value="false"/>
+							<argument name="seasonality_mode" value="additive"/>
+                        </timeSeriesAnalysis>
+                    </discoveryMethod>
+                </threshold>
+            </thresholds>
+        </counter>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/in-broadcast-pkts"
+                 counterGuiName="Inbound Broadcast Packets" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/in-multicast-pkts"
+                 counterGuiName="Inbound Multicast Packets" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/out-unicast-pkts"
+                 counterGuiName="Outbound Unicast Packets" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/out-broadcast-pkts"
+                 counterGuiName="Outbound Broadcast Packets" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/out-multicast-pkts"
+                 counterGuiName="Outbound Multicast Packets" collected="Y"/>
+
+        <!-- multicast-state-network-interface-->
+
+        <counter objectType="bbf-mgmd:multicast-state/mgmd/multicast-vpn/multicast-network-interface"
+                 counterName="single-uplink-interface-to-router-state-data/out-joins" counterGuiName="Outbound Joins"
+                 collected="Y"/>
+
+        <counter objectType="bbf-mgmd:multicast-state/mgmd/multicast-vpn/multicast-network-interface"
+                 counterName="single-uplink-interface-to-router-state-data/out-leaves" counterGuiName="Outbound Leaves"
+                 collected="Y"/>
+
+        <counter objectType="bbf-mgmd:multicast-state/mgmd/multicast-vpn/multicast-network-interface"
+                 counterName="single-uplink-interface-to-router-state-data/in-interface-wrong-version-queries"
+                 counterGuiName="Inbound Interface Wrong Version Queries" collected="Y"/>
+
+        <counter objectType="bbf-mgmd:multicast-state/mgmd/multicast-vpn/multicast-network-interface"
+                 counterName="single-uplink-interface-to-router-state-data/in-invalid-message"
+                 counterGuiName="Inbound Invalid Messages" collected="Y"/>
+
+        <counter objectType="bbf-mgmd:multicast-state/mgmd/multicast-vpn/multicast-network-interface"
+                 counterName="single-uplink-interface-to-router-state-data/in-specific-queries"
+                 counterGuiName="Inbound Specific Queries" collected="Y"/>
+
+        <counter objectType="bbf-mgmd:multicast-state/mgmd/multicast-vpn/multicast-network-interface"
+                 counterName="single-uplink-interface-to-router-state-data/in-general-queries"
+                 counterGuiName="Inbound General Queries" collected="Y"/>
+
+        <counter objectType="bbf-mgmd:multicast-state/mgmd/multicast-vpn"
+                 counterName="multicast-proxy-or-snooper/number-active-groups" counterGuiName="Number Of Active Groups"
+                 collected="Y"/>
+
+        <!-- hardware-state-transceiver -->
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="bbf-hardware-transceivers:transceiver/diagnostics/supply-voltage"
+                 counterGuiName="Supply Voltage" unit="100 uV" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="bbf-hardware-transceivers:transceiver/diagnostics/temperature"
+                 counterGuiName="Module Temperature" unit="1/256 degrees Celsius"
+                 collected="Y"/>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:voltage-low-alarm" counterGuiName="Voltage Low Alarm"
+                 unit="100 uV" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:voltage-low-warning" counterGuiName="Voltage Low Warning"
+                 unit="100 uV" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:voltage-high-warning" counterGuiName="Voltage High Warning"
+                 unit="100 uV" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:voltage-high-alarm" counterGuiName="Voltage High Alarm"
+                 unit="100 uV" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:temperature-low-alarm" counterGuiName="Temperature Low Alarm"
+                 unit="0.001 degrees Celsius" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:temperature-high-alarm" counterGuiName="Temperature High Alarm"
+                 unit="0.001 degrees Celsius" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:temperature-high-warning"
+                 counterGuiName="Temperature High Warning" unit="0.001 degrees Celsius" collected="Y" isAdmin="N"
+                 isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:temperature-low-warning" counterGuiName="Temperature Low Warning"
+                 unit="0.001 degrees Celsius" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:tx-bias-low-alarm" counterGuiName="Outbound Bias Low Alarm"
+                 unit="1 uA" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:tx-bias-low-warning" counterGuiName="Outbound Bias Low Warning"
+                 unit="1 uA" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:tx-bias-high-alarm" counterGuiName="Outbound Bias High Alarm"
+                 unit="1 uA" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:tx-bias-high-warning" counterGuiName="Outbound Bias High Warning"
+                 unit="1 uA" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:tx-power-low-warning" counterGuiName="Outbound Power Low Warning"
+                 unit="0.1 dBm" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:tx-power-low-alarm" counterGuiName="Outbound Power Low Alarm"
+                 unit="0.1 dBm" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:tx-power-high-warning"
+                 counterGuiName="Outbound Power High Warning" unit="0.1 dBm" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:tx-power-high-alarm" counterGuiName="Outbound Power High Alarm"
+                 unit="0.1 dBm" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:rx-power-high-alarm" counterGuiName="Inbound Power High Alarm"
+                 unit="0.1 dBm" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:rx-power-high-warning"
+                 counterGuiName="Inbound Power High Warning" unit="0.1 dBm" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:rx-power-low-alarm" counterGuiName="Inbound Power Low Alarm"
+                 unit="0.1 dBm" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="nokia-hardware-extension:rx-power-low-warning" counterGuiName="Inbound Power Low Warning"
+                 unit="0.1 dBm" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+
+        <!-- hardware-state-transceiver-link -->
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="bbf-hardware-transceivers:transceiver-link/diagnostics/tx-bias"
+                 counterGuiName="Outbound Bias Current" unit="2 uA" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="bbf-hardware-transceivers:transceiver-link/diagnostics/nokia-hardware-transceivers-dbm:tx-power-dbm"
+                 counterGuiName="Outbound Power" unit="0.1 dBm" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+        <counter objectType="ietf-hardware:hardware-state/component"
+                 counterName="bbf-hardware-transceivers:transceiver-link/diagnostics/nokia-hardware-transceivers-dbm:rx-power-dbm"
+                 counterGuiName="Inbound Power" unit="0.1 dBm" collected="Y" isAdmin="N" isOper="N">
+        </counter>
+
+        <!-- multicast-vpn counters-->
+        <counter objectType="bbf-mgmd:multicast-state/mgmd/multicast-vpn/multicast-interface-to-host"
+                 counterName="interface-to-host-rx-state-data/in-successful-join-requests"
+                 counterGuiName="Inbound Successful Join Request" collected="Y"/>
+        <counter objectType="bbf-mgmd:multicast-state/mgmd/multicast-vpn/multicast-interface-to-host"
+                 counterName="interface-to-host-rx-state-data/in-unsuccessful-join-requests"
+                 counterGuiName="Inbound Unsuccessful Join Request" collected="Y"/>
+        <counter objectType="bbf-mgmd:multicast-state/mgmd/multicast-vpn/multicast-interface-to-host"
+                 counterName="interface-to-host-rx-state-data/in-leaves" counterGuiName="Inbound Leaves" collected="Y"/>
+        <counter objectType="bbf-mgmd:multicast-state/mgmd/multicast-vpn/multicast-interface-to-host"
+                 counterName="interface-to-host-rx-state-data/in-invalid-messages"
+                 counterGuiName="Inbound Invalid Messages" collected="Y"/>
+        <counter objectType="bbf-mgmd:multicast-state/mgmd/multicast-vpn/multicast-interface-to-host"
+                 counterName="interface-to-hosts-tx-state-data/out-specific-queries"
+                 counterGuiName="Outbound Specific Queries" collected="Y"/>
+        <counter objectType="bbf-mgmd:multicast-state/mgmd/multicast-vpn/multicast-interface-to-host"
+                 counterName="interface-to-hosts-tx-state-data/out-general-queries"
+                 counterGuiName="Outbound General Queries" collected="Y"/>
+
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="bbf-hardware-cpu-resource:cpu-processor-data/percent-cpu-usage/percent-cpu-idle" collected="Y" counterGuiName="Unused CPU Percentage" unit="%"/>
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="bbf-hardware-cpu-resource:cpu-processor-data/memory-usage/free-memory" collected="Y" counterGuiName="Free Memory" unit="KB"/>
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="bbf-hardware-cpu-resource:cpu-processor-data/memory-usage/total-memory" collected="Y" counterGuiName="Total Memory" unit="KB"/>
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="bbf-hardware-cpu-resource:cpu-processor-data/memory-usage/used-mem" collected="Y" counterGuiName="Used Memory" unit="KB"/>
+
+
+        <counter collected="Y" counterGuiName="Max Erase Cycles"
+                 counterName="nokia-hardware-disk-resource:nand-resource-data/max-erase-cycles"
+                 objectType="ietf-hardware:hardware-state/component"/>
+
+        <counter collected="Y" counterGuiName="Bad Sectors"
+                 counterName="nokia-hardware-disk-resource:nand-resource-data/bad-sectors"
+                 objectType="ietf-hardware:hardware-state/component"/>
+
+        <counter collected="Y" counterGuiName="Total Disk Size" unit="Kilobytes" counterName="size"
+                 objectType="ietf-hardware:hardware-state/component/nokia-hardware-disk-resource:volume-resource-data/volume-resource-list"/>
+
+        <counter collected="Y" counterGuiName="Free Disk Size" unit="Kilobytes" counterName="free"
+                 objectType="ietf-hardware:hardware-state/component/nokia-hardware-disk-resource:volume-resource-data/volume-resource-list"/>
+
+        <!-- xpon-bip-pm -->
+        <counter
+                objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                counterName="bbf-xpon-performance-management:xpon/phy/in-bip-protected-words" collected="Y"
+                counterGuiName="Inbound BIP-32 Protection Words - History 15min"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                counterName="bbf-xpon-performance-management:xpon/phy/in-bip-errors" collected="Y"
+                counterGuiName="Inbound BIP-32 Errors - History 15min"/>
+
+        <!-- xpon-fec-pm -->
+        <counter
+                objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                counterName="bbf-xpon-performance-management:xpon/phy/corrected-fec-bytes" collected="Y" counterGuiName="Corrected Bytes - History 15min"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                counterName="bbf-xpon-performance-management:xpon/phy/corrected-fec-codewords" collected="Y" counterGuiName="Corrected Code Words - History 15min"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                counterName="bbf-xpon-performance-management:xpon/phy/uncorrectable-fec-codewords" collected="Y"
+                counterGuiName="Uncorrectable Code Words - History 15min"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                counterName="bbf-xpon-performance-management:xpon/phy/in-fec-codewords" collected="Y" counterGuiName="Total Code Words - History 15min"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                counterName="bbf-xpon-performance-management:xpon/phy/fec-seconds" collected="Y" counterGuiName="FEC Seconds - History 15min"/>
+
+        <!-- DHCPv6 counters-->
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-ldra:dhcpv6-ldra/in-bad-packets-from-client"
+                 counterGuiName="Inbound Bad Packets From Client - DHCPv6" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-ldra:dhcpv6-ldra/in-bad-packets-from-server"
+                 counterGuiName="Inbound Bad Packets From Server - DHCPv6" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-ldra:dhcpv6-ldra/option-17-inserted-packets-to-server"
+                 counterGuiName="Option 17 Inserted Packets To Server" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-ldra:dhcpv6-ldra/option-17-removed-packets-to-client"
+                 counterGuiName="Option 17 Removed Received Packets To Client" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-ldra:dhcpv6-ldra/option-18-inserted-packets-to-server"
+                 counterGuiName="Option 18 Inserted Packets To Server" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-ldra:dhcpv6-ldra/option-18-removed-packets-to-client"
+                 counterGuiName="Option 18 Removed Packets To Client" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-ldra:dhcpv6-ldra/option-37-inserted-packets-to-server"
+                 counterGuiName="Option 37 Inserted Packets To Server" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-ldra:dhcpv6-ldra/option-37-removed-packets-to-client"
+                 counterGuiName="Option 37 Removed Packets To Client" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-ldra:dhcpv6-ldra/outgoing-mtu-exceeded-packets-from-client"
+                 counterGuiName="Outgoing MTU Exceeded" collected="Y"/>
+
+
+        <!-- eONU counters -->
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component"
+                 counterName="state/admin-state" counterGuiName="Administrative State" collected="Y" isAdmin="Y">
+            <enumMapping>
+                <enum name="enum1" value="1" guiName="Locked"/>
+                <enum name="enum2" value="1" guiName="Locked"/>
+                <enum name="enum3" value="1" guiName="Locked"/>
+                <enum name="enum4" value="0" guiName="Unlocked"/>
+            </enumMapping>
+        </counter>
+
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component"
+                 counterName="state/oper-state" counterGuiName="Operational State" collected="Y" isOper="Y">
+            <enumMapping>
+                <enum name="enum1" value="1" guiName="Down"/>
+                <enum name="enum2" value="1" guiName="Down"/>
+                <enum name="enum3" value="0" guiName="Up"/>
+                <enum name="enum4" value="1" guiName="Down"/>
+            </enumMapping>
+        </counter>
+
+        <!-- Interface State -->
+        <counter
+                objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface"
+                counterName="admin-status" counterGuiName="Administrative State" collected="Y" isAdmin="Y">
+            <enumMapping>
+                <enum name="enum1" value="0" guiName="Unlocked"/>
+                <enum name="enum2" value="1" guiName="Locked"/>
+                <enum name="enum3" value="1" guiName="Locked"/>
+            </enumMapping>
+        </counter>
+        <counter
+                objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface"
+                counterName="oper-status" counterGuiName="Operational State" collected="Y" isOper="Y">
+            <enumMapping>
+                <enum name="enum1" value="0" guiName="Up"/>
+                <enum name="enum2" value="1" guiName="Down"/>
+                <enum name="enum3" value="1" guiName="Down"/>
+                <enum name="enum4" value="1" guiName="Down"/>
+                <enum name="enum5" value="1" guiName="Down"/>
+                <enum name="enum6" value="1" guiName="Down"/>
+                <enum name="enum7" value="1" guiName="Down"/>
+            </enumMapping>
+        </counter>
+
+        <counter
+                objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"
+                counterName="bbf-xpon-performance-management-mounted:xpon/phy/in-bip-protected-words" counterGuiName="Inbound BIP-32 Protection Words - History 15min"
+                collected="Y"/>
+        <counter
+                objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"
+                counterName="bbf-xpon-performance-management-mounted:xpon/phy/in-bip-errors" counterGuiName="Inbound BIP-32 Errors - History 15min"
+                collected="Y"/>
+        <counter
+                objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"
+                counterName="bbf-xpon-performance-management-mounted:xpon/phy/corrected-fec-bytes" counterGuiName="Corrected Bytes - History 15min" collected="Y"/>
+        <counter
+                objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"
+                counterName="bbf-xpon-performance-management-mounted:xpon/phy/corrected-fec-codewords" counterGuiName="Corrected Code Words - History 15min" collected="Y"/>
+        <counter
+                objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"
+                counterName="bbf-xpon-performance-management-mounted:xpon/phy/uncorrectable-fec-codewords" counterGuiName="Uncorrectable Code Words - History 15min"
+                collected="Y"/>
+        <counter
+                objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"
+                counterName="bbf-xpon-performance-management-mounted:xpon/phy/in-fec-codewords" counterGuiName="Total Code Words - History 15min" collected="Y"/>
+        <counter
+                objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"
+                counterName="bbf-xpon-performance-management-mounted:xpon/phy/fec-seconds" counterGuiName="FEC Seconds - History 15min" collected="Y"/>
+
+        <!-- ipv4 counters-->
+        <counter
+                objectType="ietf-interfaces:interfaces-state/nokia-ipv4-address-spoofing-prevention:ipv4-security-statistics/interface"
+                counterName="in-ip-packet-discards" counterGuiName="Inbound IP Packets Discards" collected="Y"
+                unit="pkts"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/nokia-ipv4-address-spoofing-prevention:ipv4-security-statistics/interface"
+                counterName="in-arp-source-mac-senderhwaddr-mismatch-discards"
+                counterGuiName="Inbound ARP Packet Mismatch Discards" collected="Y" unit="pkts"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/nokia-ipv4-address-spoofing-prevention:ipv4-security-statistics/interface"
+                counterName="in-arp-probe-discards" counterGuiName="Inbound ARP Probe Discards" collected="Y"
+                unit="pkts"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/nokia-ipv4-address-spoofing-prevention:ipv4-security-statistics/interface"
+                counterName="in-arp-sender-ip-discards" counterGuiName="Inbound ARP Sender IP Discards" collected="Y"
+                unit="pkts"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/nokia-ipv4-address-spoofing-prevention:ipv4-security-statistics/interface"
+                counterName="in-arp-mac-mismatch-discards" counterGuiName="Inbound ARP MAC Mismatch Discards"
+                collected="Y" unit="pkts"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/nokia-ipv4-address-spoofing-prevention:ipv4-security-statistics/interface"
+                counterName="in-arp-target-ip-discards" counterGuiName="Inbound ARP Target IP Discards" collected="Y"
+                unit="pkts"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/nokia-ipv4-address-spoofing-prevention:ipv4-security-statistics/interface"
+                counterName="in-garp-forwards" counterGuiName="Inbound GARP Fowards" collected="Y" unit="pkts"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/nokia-ipv4-address-spoofing-prevention:ipv4-security-statistics/interface"
+                counterName="nokia-arp-downstream-security:out-arp-req-packet-forwards"
+                counterGuiName="Outbound ARP Packets Forwards" collected="Y" unit="pkts"/>
+
+        <!-- ND and NS Discard packets for IPv6 Antispoofing -->
+        <counter
+                objectType="ietf-interfaces:interfaces-state/nokia-ipv6-address-spoofing-prevention:ipv6-security-statistics/interface"
+                counterName="ipv6-statistics/in-ipv6-packet-discards"
+                counterGuiName="Inbound Source IPv6 Address Not Assigned To Interface Discards" collected="Y"
+                unit="pkts"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/nokia-ipv6-address-spoofing-prevention:ipv6-security-statistics/interface"
+                counterName="ipv6-statistics/in-nd-source-mac-source-link-layer-address-mismatch-discards"
+                counterGuiName="Inbound Source MAC Mismatch With Source Ethernet MAC ND Packet Discards" collected="Y"
+                unit="pkts"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/nokia-ipv6-address-spoofing-prevention:ipv6-security-statistics/interface"
+                counterName="ipv6-statistics/in-nd-source-mac-target-link-layer-address-mismatch-discards"
+                counterGuiName="Inbound Target MAC Mismatch With Source Ethernet MAC ND Packet Discards" collected="Y"
+                unit="pkts"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/nokia-ipv6-address-spoofing-prevention:ipv6-security-statistics/interface"
+                counterName="ipv6-statistics/in-nd-mac-mismatch-discards"
+                counterGuiName="Inbound Source and Target MAC Mismatch With Learned MAC ND Packet Discards"
+                collected="Y" unit="pkts"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/nokia-ipv6-address-spoofing-prevention:ipv6-security-statistics/interface"
+                counterName="ipv6-statistics/in-nd-target-address-discards"
+                counterGuiName="Inbound Target IPv6 Mismatch With Static Or Learned MAC ND Packet Discards"
+                collected="Y" unit="pkts"/>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/nokia-ipv6-address-spoofing-prevention:ipv6-security-statistics/interface"
+                counterName="ipv6-statistics/out-neighbor-solicit-packet-forwards"
+                counterGuiName="Outbound Multicast And Unicast Neighbor Solicit Packets" collected="Y" unit="pkts"/>
+
+
+   		<!-- Ethernet Frame counters - LT-->
+        <counter
+                objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                counterName="bbf-if-pm:in-discards"
+                counterGuiName="Inbound Discards - History 15min" tca="N" collected="Y">
+            <thresholds>
+                <!-- in-discards is uint32 -->
+                <threshold defaultValue="450000" operator="gt" alarmTypeId="in-discards-threshold-crossed-alarm"
+                           counterMax="4294967295" objectType="ietf-interfaces:interfaces/interface"/>
+            </thresholds>
+        </counter>
+        <counter
+                objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                counterName="bbf-if-pm:out-discards"
+                counterGuiName="Outbound Discards - History 15min" tca="N" collected="Y">
+            <thresholds>
+                <!-- out-discards is uint32 -->
+                <threshold defaultValue="450000" operator="gt" alarmTypeId="out-discards-threshold-crossed-alarm"
+                           counterMax="4294967295" objectType="ietf-interfaces:interfaces/interface"/>
+            </thresholds>
+        </counter>
+
+        <!-- Ethernet Frame counters-->
+        <counter
+                objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"
+                counterName="nokia-interfaces-performance-management-mounted:in-drop-events"
+                counterGuiName="Inbound Drop Events - History 15min" tca="N" collected="Y">
+            <thresholds>
+                <threshold defaultValue="1" operator="gt" alarmTypeId="in-drop-events-threshold-crossed-alarm"
+                           objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface"/>
+            </thresholds>
+        </counter>
+        <counter
+                objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"
+                counterName="nokia-interfaces-performance-management-mounted:out-drop-events"
+                counterGuiName="Outbound Drop Events - History 15min" tca="N" collected="Y">
+            <thresholds>
+                <threshold defaultValue="1" operator="gt" alarmTypeId="out-drop-events-threshold-crossed-alarm"
+                           objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface"/>
+            </thresholds>
+        </counter>
+        <counter
+                objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"				counterName="bbf-ethernet-performance-management-mounted:ethernet/in-pkts-errors-fcs"
+                counterGuiName="Inbound FCS Error Packets - History 15min" tca="N" collected="Y">
+            <thresholds>
+                <threshold defaultValue="1" operator="gt" alarmTypeId="in-crc-errored-pkts-threshold-crossed-alarm"
+                           objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface"/>
+            </thresholds>
+        </counter>
+        <counter
+                objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"				counterName="bbf-ethernet-performance-management-mounted:ethernet/in-undersize-pkts"
+                counterGuiName="Inbound Undersize Packets - History 15min" tca="N" collected="Y">
+            <thresholds>
+                <threshold defaultValue="1" operator="gt" alarmTypeId="in-undersize-pkts-threshold-crossed-alarm"
+                           objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface"/>
+            </thresholds>
+        </counter>
+        <counter
+                objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"				counterName="bbf-ethernet-performance-management-mounted:ethernet/in-giant-pkts"
+                counterGuiName="Inbound Giant Packets - History 15min" tca="N" collected="Y">
+            <thresholds>
+                <threshold defaultValue="1" operator="gt" alarmTypeId="in-oversize-pkts-threshold-crossed-alarm"
+                           objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface"/>
+            </thresholds>
+        </counter>
+
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history" counterName="in-octets" counterGuiName="Inbound Octets - History 15min" collected="Y" unit="bytes"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history" counterName="in-unicast-pkts" counterGuiName="Inbound Unicast Packets - History 15min" collected="Y" unit="pkts"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history" counterName="in-broadcast-pkts" counterGuiName="Inbound Broadcast Packets - History 15min" collected="Y" unit="pkts"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history" counterName="in-multicast-pkts" counterGuiName="Inbound Multicast Packets - History 15min" collected="Y" unit="pkts"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history" counterName="out-octets" counterGuiName="Outbound Octets - History 15min" collected="Y" unit="bytes"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history" counterName="out-broadcast-pkts" counterGuiName="Outbound Broadcast Packets - History 15min" collected="Y" unit="pkts"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history" counterName="out-multicast-pkts" counterGuiName="Outbound Multicast Packets - History 15min" collected="Y" unit="pkts"/>
+
+        <!--pon-stats-counter-->
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/nokia-sdan-additional-statistics:in-dropped-bytes"
+                 counterGuiName="Total Inbound Dropped - Bytes" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/nokia-sdan-additional-statistics:out-dropped-bytes"
+                 counterGuiName="Total Outbound Dropped - Bytes" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/nokia-sdan-xpon-statistics:xpon/out-incidental-broadcast-gem-port-bytes"
+                 counterGuiName="Outbound Broadcast GEM Port - Bytes" unit="Bytes" collected="Y" isAdmin="N"
+                 isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/nokia-sdan-xpon-statistics:xpon/out-incidental-broadcast-gem-port-packets"
+                 counterGuiName="Outbound Broadcast GEM Port - Packets" unit="pkts" collected="Y" isAdmin="N"
+                 isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/nokia-sdan-xpon-statistics:xpon/out-incidental-broadcast-gem-port-dropped-bytes"
+                 counterGuiName="Outbound Broadcast GEM Port Drop - Bytes" unit="Bytes" collected="Y" isAdmin="N"
+                 isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/nokia-sdan-xpon-statistics:xpon/out-incidental-broadcast-gem-port-dropped-packets"
+                 counterGuiName="Outbound Broadcast GEM Port Drop - Packets" unit="pkts" collected="Y" isAdmin="N"
+                 isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/nokia-sdan-xpon-statistics:xpon/out-multicast-gem-port-bytes"
+                 counterGuiName="Outbound Multicast GEM Port - Bytes" unit="Bytes" collected="Y" isAdmin="N"
+                 isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/nokia-sdan-xpon-statistics:xpon/out-multicast-gem-port-packets"
+                 counterGuiName="Outbound Multicast GEM Port - Packets" unit="pkts" collected="Y" isAdmin="N"
+                 isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/nokia-sdan-xpon-statistics:xpon/out-multicast-gem-port-dropped-bytes"
+                 counterGuiName="Outbound Multicast GEM Port Drop - Bytes" unit="Bytes" collected="Y" isAdmin="N"
+                 isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/nokia-sdan-xpon-statistics:xpon/out-multicast-gem-port-dropped-packets"
+                 counterGuiName="Outbound Multicast GEM Port Drop - Packets" unit="pkts" collected="Y" isAdmin="N"
+                 isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/nokia-sdan-xpon-statistics:xpon/out-unicast-gem-port-bytes"
+                 counterGuiName="Outbound Unicast GEM Port - Bytes" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/nokia-sdan-xpon-statistics:xpon/out-unicast-gem-port-packets"
+                 counterGuiName="Outbound Unicast GEM Port - Packets" unit="pkts" collected="Y" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/nokia-sdan-xpon-statistics:xpon/out-unicast-gem-port-dropped-bytes"
+                 counterGuiName="Outbound Unicast GEM Port Drop - Bytes" unit="Bytes" collected="Y" isAdmin="N"
+                 isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/nokia-sdan-xpon-statistics:xpon/out-unicast-gem-port-dropped-packets"
+                 counterGuiName="Outbound Unicast GEM Port Drop - Packets" unit="pkts" collected="Y" isAdmin="N"
+                 isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-interfaces-statistics-management:in-pkts" counterGuiName="Inbound Packets"
+                 unit="pkts" collected="Y" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface"
+                 counterName="statistics/bbf-interfaces-statistics-management:out-pkts"
+                 counterGuiName="Outbound Packets" unit="pkts" collected="Y" isAdmin="N" isOper="N"/>
+        <!--PON Utilization-->
+     <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-interface-speed-monitoring:speed-monitoring/data/history" counterName="receive-datarate" counterGuiName="Speed Monitoring - Receive Datarate" unit="megabit/second" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-interface-speed-monitoring:speed-monitoring/data/history" counterName="transmit-datarate" counterGuiName="Speed Monitoring - Transmit Datarate" unit="megabit/second"  collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-interface-speed-monitoring:speed-monitoring/data/history" counterName="transmit-broadcast-datarate" counterGuiName="Speed Monitoring - Transmit Datarate - Broadcast" unit="megabit/second" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-interface-speed-monitoring:speed-monitoring/data/history" counterName="transmit-multicast-datarate" counterGuiName="Speed Monitoring - Transmit Datarate - Multicast" unit="megabit/second"  collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-interface-speed-monitoring:speed-monitoring/data/history" counterName="transmit-unicast-datarate" counterGuiName="Speed Monitoring - Transmit Datarate - Unicast" unit="megabit/second"  collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="bbf-xpon:channel-pair/nokia-xponinfra-cac:us-l2-capacity" counterGuiName="Channel Pair L2 Capacity - Outbound"  unit="megabit/second" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="bbf-xpon:channel-pair/nokia-xponinfra-cac:ds-l2-capacity" counterGuiName="Channel Pair L2 Capacity - Inbound"  unit="megabit/second" collected="Y"/>
+
+        <!-- Top-5 ONTs-->
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-interface-speed-monitoring:speed-monitoring/data/history/top-utilized-child-interfaces/in" counterName="top" counterGuiName="Speed Monitoring - Upstream - ONT Rank" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-interface-speed-monitoring:speed-monitoring/data/history/top-utilized-child-interfaces/in" counterName="child-interface-name" counterGuiName="Speed Monitoring - Upstream - ONT Name" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-interface-speed-monitoring:speed-monitoring/data/history/top-utilized-child-interfaces/in" counterName="in-data-rate" counterGuiName="Speed Monitoring - Upstream - ONT Data Rate" unit="megabit/second" destination="kafka" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-interface-speed-monitoring:speed-monitoring/data/history/top-utilized-child-interfaces/out" counterName="top" counterGuiName="Speed Monitoring - Downstream - ONT Rank" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-interface-speed-monitoring:speed-monitoring/data/history/top-utilized-child-interfaces/out" counterName="child-interface-name" counterGuiName="Speed Monitoring - Downstream - ONT Name" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-interface-speed-monitoring:speed-monitoring/data/history/top-utilized-child-interfaces/out" counterName="out-data-rate" counterGuiName="Speed Monitoring - Downstream - ONT Data Rate" unit="megabit/second" destination="kafka" collected="Y"/>
+
+        <!-- ICMPv6 counters -->
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/upstream/router-solicitation/discard-packets" counterGuiName="Upstream - Router Solicitation Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/upstream/router-advertisement/discard-packets" counterGuiName="Upstream - Router Advertisement Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/upstream/neighbour-advertisement/discard-packets" counterGuiName="Upstream - Neighbour Advertisement Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/upstream/neighbour-solicitation/discard-packets" counterGuiName="Upstream - Neighbour Solicitation Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/upstream/router-redirect/discard-packets" counterGuiName="Upstream - Router Redirect Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/upstream/multicast-listener-query/discard-packets" counterGuiName="Upstream - Multicast Listener Query Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/upstream/error-message/discard-packets" counterGuiName="Upstream - Error Message Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/upstream/informational-message/discard-packets" counterGuiName="Upstream - Informational Message Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/upstream/invalid-message/discard-packets" counterGuiName="Upstream - Invalid Message Discard Packets" unit="pkts" collected="Y"/>
+
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/downstream/router-solicitation/discard-packets" counterGuiName="Downstream - Router Solicitation Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/downstream/router-advertisement/discard-packets" counterGuiName="Downstream - Router Advertisement Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/downstream/neighbour-advertisement/discard-packets" counterGuiName="Downstream - Neighbour Advertisement Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/downstream/neighbour-solicitation/discard-packets" counterGuiName="Downstream - Neighbour Solicitation Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/downstream/router-redirect/discard-packets" counterGuiName="Downstream - Router Redirect Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/downstream/multicast-listener-query/discard-packets" counterGuiName="Downstream - Multicast Listener Query Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/downstream/error-message/discard-packets" counterGuiName="Downstream - Error Message Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/downstream/informational-message/discard-packets" counterGuiName="Downstream - Informational Message Discard Packets" unit="pkts" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/bbf-icmpv6:icmpv6-stats/downstream/invalid-message/discard-packets" counterGuiName="Downstream - Invalid Message Discard Packets" unit="pkts" collected="Y"/>
+        <!-- IPFIX streaming -->
+        <!-- onu-iventory-->
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component" counterName="class" counterGuiName="Class" destination="kafka" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component" counterName="hardware-rev" counterGuiName="Revision" destination="kafka" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component" counterName="mfg-name" counterGuiName="Manufacturer" destination="kafka" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component" counterName="model-name" counterGuiName="Model" destination="kafka" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component" counterName="serial-num" counterGuiName="Serial Number" destination="kafka" collected="Y"/>
+        <!--onu-software-status -->
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component/bbf-software-image-management-one-dot-one-mounted:software/software" counterName="name" counterGuiName="Software Name" destination="kafka" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component/bbf-software-image-management-one-dot-one-mounted:software/software/revisions/revision" counterName="version" counterGuiName="Version" destination="kafka" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component/bbf-software-image-management-one-dot-one-mounted:software/software/revisions/revision" counterName="is-active" counterGuiName="Active" destination="kafka" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component/bbf-software-image-management-one-dot-one-mounted:software/software/revisions/revision" counterName="name" counterGuiName="Revision Name" destination="kafka" collected="Y"/>
+        <!--ont-diagnostics -->
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component" counterName="bbf-hardware-transceivers-mounted:transceiver/diagnostics/temperature" counterGuiName="Module Temperature" unit="1/256 degrees Celsius" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component" counterName="bbf-hardware-transceivers-mounted:transceiver/diagnostics/supply-voltage" counterGuiName="Module Voltage" unit="100 uV" collected="Y"/>
+        <!--ont-transceiver-link -->
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component" counterName="bbf-hardware-transceivers-mounted:transceiver-link/diagnostics/nokia-hardware-transceivers-dbm-mounted:tx-power-dbm" counterGuiName="Outbound Signal Level" unit="0.1 dBm" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component" counterName="bbf-hardware-transceivers-mounted:transceiver-link/diagnostics/nokia-hardware-transceivers-dbm-mounted:rx-power-dbm" counterGuiName="Inbound Signal Level" unit="0.1 dBm" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component" counterName="bbf-hardware-transceivers-mounted:transceiver-link/diagnostics/tx-bias" counterGuiName="Laser Bias Current" unit="2 uA" collected="Y"/>
+        <!--olt-inventory -->
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="class" counterGuiName="Class" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="hardware-rev" counterGuiName="HW Revision" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="serial-num" counterGuiName="Serial Number" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="mfg-name" counterGuiName="Manufacturer Name" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="model-name" counterGuiName="Model Name" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="description" counterGuiName="Description" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="mfg-date" counterGuiName="Manufacture Date" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="state/state-last-changed" counterGuiName="Last Updated" destination="kafka" collected="Y"/>
+        <!--eonu-interfaces-state -->
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface" counterName="last-change" counterGuiName="Last Change" destination="kafka" collected="Y"/>
+        <!-- GEM Port Bulk Counter -->
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-xpongemtcont-mounted:xpongemtcont-state/gemports/gemport/bbf-xpongemtcont-gemport-performance-management-mounted:performance/intervals-15min/history" counterName="ani-side/out-frames" counterGuiName="Outbound(ANI) Frames" unit="frames" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-xpongemtcont-mounted:xpongemtcont-state/gemports/gemport/bbf-xpongemtcont-gemport-performance-management-mounted:performance/intervals-15min/history" counterName="ani-side/in-frames" counterGuiName="Inbound(ANI) Frames" unit="frames" collected="Y"/>
+
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-xpongemtcont-mounted:xpongemtcont-state/gemports/gemport/bbf-xpongemtcont-gemport-performance-management-mounted:performance/intervals-15min/history" counterName="ani-side/nokia-onu-gemport-performance-management-mounted:lost-ds-pkts" counterGuiName="Dropped Downstream Packets" unit="pkts" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-xpongemtcont-mounted:xpongemtcont-state/gemports/gemport/bbf-xpongemtcont-gemport-performance-management-mounted:performance/intervals-15min/history" counterName="ani-side/nokia-onu-gemport-performance-management-mounted:lost-us-pkts" counterGuiName="Dropped Upstream Packets" unit="pkts" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-xpongemtcont-mounted:xpongemtcont-state/gemports/gemport/bbf-xpongemtcont-gemport-performance-management-mounted:performance/intervals-15min/history" counterName="ani-side/nokia-onu-gemport-performance-management-mounted:misinserted-pkts" counterGuiName="Misinserted Packets" unit="pkts" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-xpongemtcont-mounted:xpongemtcont-state/gemports/gemport/bbf-xpongemtcont-gemport-performance-management-mounted:performance/intervals-15min/history" counterName="ani-side/nokia-onu-gemport-performance-management-mounted:rx-gem-blocks" counterGuiName="GEM Blocks Received" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-xpongemtcont-mounted:xpongemtcont-state/gemports/gemport/bbf-xpongemtcont-gemport-performance-management-mounted:performance/intervals-15min/history" counterName="ani-side/nokia-onu-gemport-performance-management-mounted:tx-gem-blocks" counterGuiName="GEM Blocks Transmitted" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-xpongemtcont-mounted:xpongemtcont-state/gemports/gemport/bbf-xpongemtcont-gemport-performance-management-mounted:performance/intervals-15min/history" counterName="ani-side/nokia-onu-gemport-performance-management-mounted:impaired-blocks" counterGuiName="Impaired Blocks" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-xpongemtcont-mounted:xpongemtcont-state/gemports/gemport/bbf-xpongemtcont-gemport-performance-management-mounted:performance/intervals-15min/history" counterName="ani-side/nokia-onu-gemport-performance-management-mounted:rx-payload-bytes" counterGuiName="Payload Bytes Received" unit="Bytes" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-xpongemtcont-mounted:xpongemtcont-state/gemports/gemport/bbf-xpongemtcont-gemport-performance-management-mounted:performance/intervals-15min/history" counterName="ani-side/nokia-onu-gemport-performance-management-mounted:tx-payload-bytes" counterGuiName="Payload Bytes Transmitted" unit="Bytes" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-xpongemtcont-mounted:xpongemtcont-state/gemports/gemport/bbf-xpongemtcont-gemport-performance-management-mounted:performance/intervals-15min/history" counterName="ani-side/nokia-onu-gemport-performance-management-mounted:encryption-key-err" counterGuiName="Encryption Key Error"  unit="errors" collected="Y"/>
+
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-xpongemtcont-mounted:xpongemtcont-state/gemports/gemport/bbf-xpongemtcont-gemport-performance-management-mounted:performance/intervals-15min/history" counterName="v-ani-side/out-frames" counterGuiName="Outbound(V-ANI) Frames" unit="frames" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-xpongemtcont-mounted:xpongemtcont-state/gemports/gemport/bbf-xpongemtcont-gemport-performance-management-mounted:performance/intervals-15min/history" counterName="v-ani-side/in-frames" counterGuiName="Inbound(V-ANI) Frames" unit="frames" collected="Y"/>
+
+        <!-- POTS UNI Bulk Counter -->
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-sip-voip-mounted:pots-interworking-nodes-state/pots-interworking/nokia-voice-performance-management-mounted:performance/intervals-15min/history" counterName="call-attempt-failures" counterGuiName="Call Attempt Failures" unit="errors" collected="Y"/>
+	<counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-sip-voip-mounted:pots-interworking-nodes-state/pots-interworking/nokia-voice-performance-management-mounted:performance/intervals-15min/history" counterName="call-terminate-failures" counterGuiName="Call Terminate Failures" unit="errors" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-sip-voip-mounted:pots-interworking-nodes-state/pots-interworking/nokia-voice-performance-management-mounted:performance/intervals-15min/history" counterName="maximum-call-setup-duration" counterGuiName="Maximum Call Setup Duration" unit="milliseconds" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-sip-voip-mounted:pots-interworking-nodes-state/pots-interworking/nokia-voice-performance-management-mounted:performance/intervals-15min/history" counterName="releases-without-dialing" counterGuiName="Releases Without Dialing" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-sip-voip-mounted:pots-interworking-nodes-state/pots-interworking/nokia-voice-performance-management-mounted:performance/intervals-15min/history" counterName="rtp-packet-errors" counterGuiName="RTP Packet Errors" unit="errors"  collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-sip-voip-mounted:pots-interworking-nodes-state/pots-interworking/nokia-voice-performance-management-mounted:performance/intervals-15min/history" counterName="maximum-off-hook-duration" counterGuiName="Maximum Off Hook Duration" unit="milliseconds" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-sip-voip-mounted:pots-interworking-nodes-state/pots-interworking/nokia-voice-performance-management-mounted:performance/intervals-15min/history" counterName="rtp-packet-loss" counterGuiName="RTP Packet Loss" unit="errors" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-sip-voip-mounted:pots-interworking-nodes-state/pots-interworking/nokia-voice-performance-management-mounted:performance/intervals-15min/history" counterName="maximum-time-rtcp-packets" counterGuiName="Maximum Time Between RTCP Packets" unit="milliseconds" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-sip-voip-mounted:pots-interworking-nodes-state/pots-interworking/nokia-voice-performance-management-mounted:performance/intervals-15min/history" counterName="maximum-jitter" counterGuiName="Maximum Jitter" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-sip-voip-mounted:pots-interworking-nodes-state/pots-interworking/nokia-voice-performance-management-mounted:performance/intervals-15min/history" counterName="buffer-underflows" counterGuiName="Buffer Underflows" collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-sip-voip-mounted:pots-interworking-nodes-state/pots-interworking/nokia-voice-performance-management-mounted:performance/intervals-15min/history" counterName="buffer-overflows" counterGuiName="Buffer Overflows" collected="Y"/>
+        <!-- DBA congrestion monitoring-->
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/nokia-sdan-dba-congestion-monitoring:shorter-monitoring-period/dba-congestion-monitoring/history" counterName="dba-congestion-ratio" counterGuiName="DBA Congestion Ratio" tca="N" unit="%" collected="Y">
+            <thresholds>
+                <threshold defaultValue="60" operator="gt" alarmTypeId="dba-congestion-rate-threshold-crossed-alarm-major" objectType="ietf-interfaces:interfaces-state/interface"/>
+                <threshold defaultValue="50" operator="gt" alarmTypeId="dba-congestion-rate-threshold-crossed-alarm-minor" objectType="ietf-interfaces:interfaces-state/interface"/>
+            </thresholds>
+        </counter>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="statistics/discontinuity-time" counterGuiName="Discontinuity Time" collected="Y" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                 counterName="interval-number"
+                 collected="Y"
+                 counterGuiName="Interval Number - History 15min"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                 counterName="measured-time"
+                 collected="Y"
+                 counterGuiName="Measured Time - History 15min"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                 counterName="invalid-data-flag"
+                 collected="Y"
+                 counterGuiName="Invalid Data Flag - History 15min">
+	            <enumMapping>
+                        <enum name="True" value="0"/>
+                        <enum name="False" value="1"/>
+                </enumMapping>
+        </counter>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                 counterName="time-stamp"
+                 collected="Y"
+                 counterGuiName="Time Stamp - History 15min"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                 counterName="bbf-xpon-performance-management:xpon/phy/"
+                 collected="Y"
+                 counterGuiName="Physical - History 15min"/>
+
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"
+                 counterName="interval-number"
+                 counterGuiName="Interval Number - History 15min"
+                 collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"
+                 counterName="measured-time"
+                 counterGuiName="Measured Time - History 15min"
+                 collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"
+                 counterName="invalid-data-flag"
+                 counterGuiName="Invalid Data Flag - History 15min"
+                 collected="Y">
+                <enumMapping>
+                        <enum name="True" value="0"/>
+                        <enum name="False" value="1"/>
+                </enumMapping>
+        </counter>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"
+                 counterName="time-stamp"
+                 counterGuiName="Time Stamp - History 15min"
+                 collected="Y"/>
+        <counter objectType="bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"
+                 counterName="ethernet"
+                 counterGuiName="Ethernet - History 15min"
+                 collected="Y"/>
+
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="bbf-hardware-transceivers:transceiver-link/diagnostics/nokia-sdan-hws-xcvr-diagnostics-aug:rssi-onu/detected-serial-number" counterGuiName="Serial Number" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="bbf-hardware-transceivers:transceiver-link/diagnostics/nokia-sdan-hws-xcvr-diagnostics-aug:rssi-onu/rssi" counterGuiName="RSSI" unit="0.1dBm" collected="Y"/>
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="bbf-hardware-transceivers:transceiver-link/diagnostics/nokia-sdan-hws-xcvr-diagnostics-aug:rssi-onu/v-ani-ref" counterGuiName="Virtual ANI" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="bbf-xponvani:v-ani/onu-id" counterGuiName="ONU ID" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="bbf-xponvani:v-ani/onu-presence-state" counterGuiName="Presence State" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="bbf-xponvani:v-ani/onu-present-on-this-olt/detected-serial-number" counterGuiName="Serial Number" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="bbf-xponvani:v-ani/onu-present-on-this-olt/detected-registration-id" counterGuiName="Registration ID" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="bbf-xponvani:v-ani/onu-present-on-this-olt/bbf-xponvani-onu-authentication:detected-loid" counterGuiName="LOID" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="bbf-xponvani:v-ani/onu-present-on-this-olt/onu-fiber-distance" counterGuiName="Fiber Distance" unit="meter" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-xpon:channel-termination/bbf-xpon-onu-state:onus-present-on-local-channel-termination/onu" counterName="onu-presence-state" counterGuiName="Presence State" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-xpon:channel-termination/bbf-xpon-onu-state:onus-present-on-local-channel-termination/onu" counterName="onu-id" counterGuiName="ONU ID" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-xpon:channel-termination/bbf-xpon-onu-state:onus-present-on-local-channel-termination/onu" counterName="detected-registration-id" counterGuiName="Registration ID" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-xpon:channel-termination/bbf-xpon-onu-state:onus-present-on-local-channel-termination/onu" counterName="bbf-xpon-onu-authentication:detected-loid" counterGuiName="LOID" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-xpon:channel-termination/bbf-xpon-onu-state:onus-present-on-local-channel-termination/onu" counterName="v-ani-ref" counterGuiName="Virtual ANI" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-xpon:channel-termination/bbf-xpon-onu-state:onus-present-on-local-channel-termination/onu" counterName="onu-detected-datetime" counterGuiName="Detected Time" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-xpon:channel-termination/bbf-xpon-onu-state:onus-present-on-local-channel-termination/onu" counterName="onu-state-last-change" counterGuiName="Last Changed" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-xpon:channel-termination/bbf-xpon-onu-state:onus-present-on-local-channel-termination/onu" counterName="nokia-sdan-xpon-onu-state-aug:detected-upstream-rate" counterGuiName="Upstream Rate" destination="kafka" collected="Y"/>
+
+        <!-- pbit-statistics counters-->
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-sdan-pbit-statistics:pbit-statistics/pbit" counterName="in-fwd-bytes" counterGuiName="Inbound Forward Bytes" collected="Y" unit="bytes"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-sdan-pbit-statistics:pbit-statistics/pbit" counterName="in-fwd-frames" counterGuiName="Inbound Forward Frames" collected="Y" unit="frames"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-sdan-pbit-statistics:pbit-statistics/pbit" counterName="in-discard-bytes" counterGuiName="Inbound Discard Bytes" collected="Y" unit="bytes"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-sdan-pbit-statistics:pbit-statistics/pbit" counterName="in-discard-frames" counterGuiName="Inbound Discard Frames" collected="Y" unit="frames"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-sdan-pbit-statistics:pbit-statistics/pbit" counterName="out-fwd-bytes" counterGuiName="Outbound Forward Bytes" collected="Y" unit="bytes"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-sdan-pbit-statistics:pbit-statistics/pbit" counterName="out-fwd-frames" counterGuiName="Outbound Forward Frames" collected="Y" unit="frames"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-sdan-pbit-statistics:pbit-statistics/pbit" counterName="out-discard-bytes" counterGuiName="Outbound Discard Bytes" collected="Y" unit="bytes"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-sdan-pbit-statistics:pbit-statistics/pbit" counterName="out-discard-frames" counterGuiName="Outbound Discard Frames" collected="Y" unit="frames"/>
+<!-- qos counters-->
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/out-pkts" counterGuiName="Outbound Packets - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+ 
+         
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/out-octets" counterGuiName="Outbound Octets - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/drop-pkts" counterGuiName="Dropped Packets - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/drop-octets" counterGuiName="Dropped Octets - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+ 
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/color/green/out-pkts" counterGuiName="Outbound Packets (Green) - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/color/green/out-octets" counterGuiName="Outbound Octets (Green) - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/color/green/drop-pkts" counterGuiName="Dropped Packets (Green) - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/color/green/drop-octets" counterGuiName="Dropped Octets (Green) - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+ 
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/color/yellow/out-pkts" counterGuiName="Outbound Packets (Yellow) - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/color/yellow/out-octets" counterGuiName="Outbound Octets (Yellow) - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/color/yellow/drop-pkts" counterGuiName="Dropped Packets (Yellow) - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/color/yellow/drop-octets" counterGuiName="Dropped Octets (Yellow) - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+ 
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/color/red/out-pkts" counterGuiName="Outbound Packets (Red) - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/color/red/out-octets" counterGuiName="Outbound Octets (Red) - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/color/red/drop-pkts" counterGuiName="Dropped Packets (Red) - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance" counterName="intervals-15min/history/color/red/drop-octets" counterGuiName="Dropped Octets (Red) - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+ 
+ 
+        <!-- H-Qos counters-->
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/out-pkts" counterGuiName="Outbound Packets - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+     
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/out-octets" counterGuiName="Outbound Octets - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/drop-pkts" counterGuiName="Dropped Packets - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/drop-octets" counterGuiName="Dropped Octets - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+ 
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/color/green/out-pkts" counterGuiName="Outbound Packets (Green) - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/color/green/out-octets" counterGuiName="Outbound Octets (Green) - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/color/green/drop-pkts" counterGuiName="Dropped Packets (Green) - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/color/green/drop-octets" counterGuiName="Dropped Octets (Green) - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+ 
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/color/yellow/out-pkts" counterGuiName="Outbound Packets (Yellow) - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/color/yellow/out-octets" counterGuiName="Outbound Octets (Yellow) - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/color/yellow/drop-pkts" counterGuiName="Dropped Packets (Yellow) - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/color/yellow/drop-octets" counterGuiName="Dropped Octets (Yellow) - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+ 
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/color/red/out-pkts" counterGuiName="Outbound Packets (Red) - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/color/red/out-octets" counterGuiName="Outbound Octets (Red) - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/color/red/drop-pkts" counterGuiName="Dropped Packets (Red) - History" unit="Pkts" collected="Y" isAdmin="N" isOper="N"/>
+ 
+        <counter objectType="ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance" counterName="intervals-15min/history/color/red/drop-octets" counterGuiName="Dropped Octets (Red) - History" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+
+        <!-- Supporting counters to get the total messages sent from LT to ONT (downstream) and ONT to LT (upstream) -->
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                 counterName="bbf-xpon-performance-management:xpon/ploam/downstream-messages/total" tca="Y" collected="Y"
+                 counterGuiName="Downstream - XPON PLOAM Total Messages - History 15min">
+            <thresholds>
+                <threshold defaultValue="10000" operator="gt" alarmTypeId="xpon-downstream-ploam-messages-threshold-crossed-alarm-major"
+                           objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history" />
+            </thresholds>
+        </counter>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+                 counterName="bbf-xpon-performance-management:xpon/ploam/upstream-messages/total" tca="Y" collected="Y"
+                 counterGuiName="Upstream - XPON PLOAM Total Messages - History 15min">
+            <thresholds>
+                <threshold defaultValue="10000" operator="gt" alarmTypeId="xpon-upstream-ploam-messages-threshold-crossed-alarm-major"
+                           objectType="ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history" />
+            </thresholds>
+        </counter>
+        
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="last-change" counterGuiName="Last Change" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="type" counterGuiName="Type" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="higher-layer-if" counterGuiName="Higher Layer If" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="lower-layer-if" counterGuiName="Lower Layer If" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="parent" counterGuiName="Parent" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="parent-rel-pos" counterGuiName="Parent Position" destination="kafka" collected="Y"/>
+        <counter objectType="ietf-hardware:hardware-state/component" counterName="contains-child" counterGuiName="Contains Child" destination="kafka" collected="Y"/>
+        
+
+		 <!-- IPDR statistics -->
+        <counter objectType="ietf-system:system-state/clock" counterName="nokia-ietf-system-aug:sys-up-time" counterGuiName="System Uptime" collected="Y" destination="kafka" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="ietf-ip:ipv4/address/ip" counterGuiName="OLT IPv4 Address" collected="Y" destination="kafka" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="ietf-ip:ipv6/address/ip" counterGuiName="OLT IPv6 Address" collected="Y" destination="kafka" isAdmin="N" isOper="N"/>
+	<!--  <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="nokia-sdan-vsi-xpon-info:vsi-ipfix-xpon-info/channel-termination-identifier" counterGuiName="PON port Id" collected="Y" destination="kafka" isAdmin="N" isOper="N"/> -->
+	<!-- <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="nokia-sdan-vsi-xpon-info:vsi-ipfix-xpon-info/remote-id" counterGuiName="Remote Id" collected="Y" destination="kafka" isAdmin="N" isOper="N"/> -->
+	<!-- <counter objectType="ietf-interfaces:interfaces-state/interface" counterName="nokia-sdan-vsi-xpon-info:vsi-ipfix-xpon-info/onu-last-up" counterGuiName="ONT Last Up Time" collected="Y" destination="kafka" isAdmin="N" isOper="N"/> -->
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-qos-policies-state:qos-policies/ingress/policy/classifier" counterName="name" counterGuiName="Name" collected="Y" destination="kafka" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-qos-policies-state:qos-policies/ingress/policy/classifier" counterName="nokia-sdan-flow-statistics:flow/statistics/creation-time" counterGuiName="Service creation Time" collected="Y" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-qos-policies-state:qos-policies/ingress/policy/classifier" counterName="nokia-sdan-flow-statistics:flow/statistics/duration-active" counterGuiName="Service Lifetime" collected="Y" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-qos-policies-state:qos-policies/ingress/policy/classifier" counterName="nokia-sdan-flow-statistics:flow/statistics/fwd-bytes" counterGuiName="Passed Bytes" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-qos-policies-state:qos-policies/ingress/policy/classifier" counterName="nokia-sdan-flow-statistics:flow/statistics/fwd-frames" counterGuiName="Passed Frames" collected="Y" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-qos-policies-state:qos-policies/egress/policy/classifier" counterName="name" counterGuiName="Name" collected="Y" destination="kafka" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-qos-policies-state:qos-policies/egress/policy/classifier" counterName="nokia-sdan-flow-statistics:flow/statistics/creation-time" counterGuiName="Service creation Time" collected="Y" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-qos-policies-state:qos-policies/egress/policy/classifier" counterName="nokia-sdan-flow-statistics:flow/statistics/duration-active" counterGuiName="Service Lifetime" collected="Y"  isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-qos-policies-state:qos-policies/egress/policy/classifier" counterName="nokia-sdan-flow-statistics:flow/statistics/fwd-bytes" counterGuiName="Passed Bytes" unit="Bytes" collected="Y" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-qos-policies-state:qos-policies/egress/policy/classifier" counterName="nokia-sdan-flow-statistics:flow/statistics/fwd-frames" counterGuiName="Passed Frames" collected="Y" isAdmin="N" isOper="N"/>
+        <counter objectType="ietf-system:system-state/nokia-ietf-system-aug:system-ip" counterName="ipv4" counterGuiName="IPv4" collected="Y"/>
+        <counter objectType="ietf-system:system-state/nokia-ietf-system-aug:system-ip" counterName="ipv6" counterGuiName="IPv6" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-qos-policies-state:qos-policies/egress/policy/classifier" counterName="nokia-sdan-flow-statistics:index" counterGuiName="Egress Service Identifier" collected="Y"/>
+        <counter objectType="ietf-interfaces:interfaces-state/interface/bbf-qos-policies-state:qos-policies/ingress/policy/classifier" counterName="nokia-sdan-flow-statistics:index" counterGuiName="Ingress Service Identifier" collected="Y"/>
+
+    </collectedCounters>
+
+</clientConfig>
