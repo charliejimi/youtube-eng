@@ -52,7 +52,8 @@
 微調以下{{代碼::github_pushV2.html}}, 微調任務如下:
 ##任務1:
 可以微調一下, 我想要的是 下面這種 層級的 資料夾/資料 架構 (VS code tree 架構)
-
+##
+result:V2.8(Exe support)
 
 
 微調以下{{代碼::github_pushV2.html}}, 微調任務如下:
